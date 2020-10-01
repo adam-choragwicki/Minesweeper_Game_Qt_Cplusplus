@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QPushButton>
+#include "QGridLayout"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GameWindow; }
@@ -16,4 +18,11 @@ public:
 
 private:
     Ui::GameWindow *ui;
+    const int ROW_COUNT;
+    const int COLUMN_COUNT;
+    const int BUTTON_SIZE = 100;
+
+    QVector<QPushButton*> buttons;
+
+    QGridLayout* m_MainGridLayout;
 };
