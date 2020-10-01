@@ -5,11 +5,14 @@
 class MineFieldButton : public QPushButton
 {
 public:
-    MineFieldButton(int x, int y, QString text = "");
-    int GetX() {return m_X;}
-    int GetY() {return m_Y;}
+    MineFieldButton(int x, int y, int fieldNumber, QString text = "");
+    int GetX() const {return m_X;}
+    int GetY() const {return m_Y;}
+    int GetFieldNumber() const {return m_FieldNumber;}
 
 private:
-    int m_X;
-    int m_Y;
+    const int m_X;
+    const int m_Y;
+    const int m_FieldNumber;
+    const QString m_TextColor = "color: black";
 };

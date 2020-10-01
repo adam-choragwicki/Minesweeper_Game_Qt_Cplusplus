@@ -20,9 +20,12 @@ private:
     Ui::GameWindow *ui;
     const int ROW_COUNT;
     const int COLUMN_COUNT;
+    const int MINE_FIELD_COUNT = ROW_COUNT * COLUMN_COUNT;
+    const double MINE_COVERAGE_PERCENTAGE = 0.2;
     const int BUTTON_SIZE = 100;
 
     QVector<MineFieldButton*> mineFieldButtons;
-
     QGridLayout* m_MainGridLayout;
+
+    void GenerateMines(QVector<MineFieldButton*>& mineFieldButtons) const;
 };
