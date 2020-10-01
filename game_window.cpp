@@ -1,11 +1,14 @@
 #include "game_window.h"
-#include "ui_gamewindow.h"
+#include "ui_game_window.h"
+#include <QDebug>
 
-GameWindow::GameWindow(QWidget *parent)
+GameWindow::GameWindow(int rowCount, int columnCount, QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::GameWindow)
 {
     ui->setupUi(this);
+
+    qDebug() << "Received numbers are " << rowCount << ", " << columnCount;
 }
 
 GameWindow::~GameWindow()

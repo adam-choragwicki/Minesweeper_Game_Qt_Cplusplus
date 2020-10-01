@@ -1,5 +1,4 @@
-#ifndef GAMEWINDOW_H
-#define GAMEWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 
@@ -12,10 +11,9 @@ class GameWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    GameWindow(QWidget *parent = nullptr);
+    GameWindow(int rowCount, int columnCount, QWidget* parent = nullptr);
     ~GameWindow();
 
 private:
     Ui::GameWindow *ui;
 };
-#endif // GAMEWINDOW_H

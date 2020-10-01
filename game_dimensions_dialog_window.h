@@ -1,5 +1,4 @@
-#ifndef GAMEDIMENSIONSDIALOGWINDOW_H
-#define GAMEDIMENSIONSDIALOGWINDOW_H
+#pragma once
 
 #include <QDialog>
 
@@ -12,11 +11,25 @@ class GameDimensionsDialogWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit GameDimensionsDialogWindow(QWidget *parent = nullptr);
+    explicit GameDimensionsDialogWindow(QWidget* parent = nullptr);
     ~GameDimensionsDialogWindow();
+    int GetRowCount() {return m_RowCount;}
+    int GetColumnCount() {return m_ColumnCount;}
+
+private slots:
+    void on_buttonBox_accepted();
+    void on_buttonBox_rejected();
 
 private:
-    Ui::GameDimensionsDialogWindow *ui;
-};
+    Ui::GameDimensionsDialogWindow* ui;
 
-#endif // GAMEDIMENSIONSDIALOGWINDOW_H
+    const int MIN_ROW_COUNT = 5;
+    const int MAX_ROW_COUNT = 10;
+    const int MIN_COLUMN_COUNT = 5;
+    const int MAX_COLUMN_COUNT = 10;
+
+    int m_RowCount;
+    int m_ColumnCount;
+
+    bool ValidateInput();
+};
