@@ -1,8 +1,8 @@
 #pragma once
 
 #include <QMainWindow>
-#include <QPushButton>
 #include "QGridLayout"
+#include "mine_field_button.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GameWindow; }
@@ -22,7 +22,7 @@ private:
     const int COLUMN_COUNT;
     const int BUTTON_SIZE = 100;
 
-    QVector<QPushButton*> buttons;
+    QVector<MineFieldButton*> mineFieldButtons;
 
     QGridLayout* m_MainGridLayout;
 };

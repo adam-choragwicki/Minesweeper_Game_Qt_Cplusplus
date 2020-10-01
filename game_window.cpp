@@ -23,11 +23,11 @@ GameWindow::GameWindow(int rowCount, int columnCount, QWidget* parent)
     {
         for(int y = 1; y <= COLUMN_COUNT; y++)
         {
-            QPushButton* button = new QPushButton(QString::number(x) + "," + QString::number(y));
-            button->setFixedSize(BUTTON_SIZE, BUTTON_SIZE);
-            buttons.push_back(button);
+            MineFieldButton* mineFieldButton = new MineFieldButton(x, y, QString::number(x) + "," + QString::number(y));
+            mineFieldButton->setFixedSize(BUTTON_SIZE, BUTTON_SIZE);
+            mineFieldButtons.push_back(mineFieldButton);
 
-            m_MainGridLayout->addWidget(button, x, y);
+            m_MainGridLayout->addWidget(mineFieldButton, x, y);
         }
     }
 }

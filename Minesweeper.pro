@@ -11,11 +11,13 @@ CONFIG += c++11
 SOURCES += \
     game_dimensions_dialog_window.cpp \
     game_window.cpp \
-    main.cpp
+    main.cpp \
+    mine_field_button.cpp
 
 HEADERS += \
     game_dimensions_dialog_window.h \
-    game_window.h
+    game_window.h \
+    mine_field_button.h
 
 FORMS += \
     game_dimensions_dialog_window.ui \
