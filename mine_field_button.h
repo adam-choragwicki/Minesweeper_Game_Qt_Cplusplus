@@ -23,5 +23,8 @@ private:
     bool m_IsMine;
     int m_AdjacentMineCount;
 
-    virtual void mousePressEvent(QMouseEvent* ) override;
+    void TestMineField();
+    void MarkMine();
+
+    virtual void mousePressEvent(QMouseEvent* event) override;
 };

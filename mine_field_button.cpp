@@ -1,4 +1,5 @@
 #include "mine_field_button.h"
+#include <QDebug>
 
 MineFieldButton::MineFieldButton(int x, int y, int fieldNumber, QString textString) :
     QPushButton(textString),
@@ -16,7 +17,42 @@ MineFieldButton::MineFieldButton(int x, int y, int fieldNumber, QString textStri
     setFont(currentFont);
 }
 
-void MineFieldButton::mousePressEvent(QMouseEvent* /*event*/)
+void MineFieldButton::TestMineField()
 {
-    setText(QString::number(m_AdjacentMineCount));
+    if(m_IsMine == true)
+    {
+        qDebug() << "GAME OVER";
+        setText("BOOM");
+    }
+    else
+    {
+        setText(QString::number(m_AdjacentMineCount));
+    }
+}
+
+void MineFieldButton::MarkMine()
+{
+    if(m_IsMine == true)
+    {
+        setStyleSheet("color: green");
+
+        qDebug() << "MINE CORRECTLY DETECTED";
+        setText("OK");
+    }
+    else
+    {
+        setText("X");
+    }
+}
+
+void MineFieldButton::mousePressEvent(QMouseEvent* event)
+{
+    if(event->button() == Qt::MouseButton::LeftButton)
+    {
+        TestMineField();
+    }
+    else if(event->button() == Qt::MouseButton::RightButton)
+    {
+        MarkMine();
+    }
 }
