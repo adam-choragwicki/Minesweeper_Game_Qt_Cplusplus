@@ -17,6 +17,8 @@ public:
     ~GameWindow();
 
 private:
+    typedef QPair<int, int> Coordinates;
+
     Ui::GameWindow *ui;
     const int ROW_COUNT;
     const int COLUMN_COUNT;
@@ -24,8 +26,9 @@ private:
     const double MINE_COVERAGE_PERCENTAGE = 0.2;
     const int BUTTON_SIZE = 100;
 
-    QVector<MineFieldButton*> mineFieldButtons;
+    QMap<Coordinates, MineFieldButton*> mineFieldButtons;
     QGridLayout* m_MainGridLayout;
 
-    void GenerateMines(QVector<MineFieldButton*>& mineFieldButtons) const;
+    void GenerateMines(QMap<Coordinates, MineFieldButton*> &mineFieldButtons) const;
+    void ScanForMines() const;
 };

@@ -28,13 +28,14 @@ GameWindow::GameWindow(int rowCount, int columnCount, QWidget* parent)
         {
             MineFieldButton* mineFieldButton = new MineFieldButton(x, y, fieldNumber, QString::number(x) + "," + QString::number(y));
             mineFieldButton->setFixedSize(BUTTON_SIZE, BUTTON_SIZE);
-            mineFieldButtons.push_back(mineFieldButton);
+            mineFieldButtons.insert(Coordinates(x, y), mineFieldButton);
             m_MainGridLayout->addWidget(mineFieldButton, x, y);
             ++fieldNumber;
         }
     }
 
     GenerateMines(mineFieldButtons);
+    ScanForMines();
 }
 
 GameWindow::~GameWindow()
@@ -43,7 +44,7 @@ GameWindow::~GameWindow()
     delete m_MainGridLayout;
 }
 
-void GameWindow::GenerateMines(QVector<MineFieldButton*>& mineFieldButtons) const
+void GameWindow::GenerateMines(QMap<Coordinates, MineFieldButton*>& mineFieldButtons) const
 {
     const int targetMineCount = ROW_COUNT * COLUMN_COUNT * MINE_COVERAGE_PERCENTAGE;
 
@@ -76,8 +77,55 @@ void GameWindow::GenerateMines(QVector<MineFieldButton*>& mineFieldButtons) cons
             if(randomNumber == mineFieldButton->GetFieldNumber())
             {
                 mineFieldButton->setText("MINE");
+                mineFieldButton->SetMine();
                 mineFieldButton->setStyleSheet("color: red");
             }
         }
+    }
+}
+
+void GameWindow::ScanForMines() const
+{
+    for(auto& mineFieldButton : mineFieldButtons)
+    {
+        int adjacentMineCount = 0;
+
+        if(mineFieldButton->IsMine())
+        {
+            /*If a field is mine itself an adjacent mine count is irrelevant*/
+            mineFieldButton->SetAdjacentMineCount(-1);
+            continue;
+        }
+        else
+        {
+            int x = mineFieldButton->GetX();
+            int y = mineFieldButton->GetY();
+
+            MineFieldButton* otherMineFieldButton = nullptr;
+
+            QVector<Coordinates> adjacentFieldsRelativeCoordinates = {Coordinates(x, y - 1),
+                                                                      Coordinates(x, y + 1),
+                                                                      Coordinates(x - 1, y),
+                                                                      Coordinates(x + 1, y),
+                                                                      Coordinates(x - 1, y - 1),
+                                                                      Coordinates(x - 1, y + 1),
+                                                                      Coordinates(x + 1, y - 1),
+                                                                      Coordinates(x + 1, y + 1)};
+
+            for(auto& coordinates : adjacentFieldsRelativeCoordinates)
+            {
+                otherMineFieldButton = mineFieldButtons.value(coordinates, nullptr);
+
+                if(otherMineFieldButton)
+                {
+                    if(otherMineFieldButton->IsMine() == true)
+                    {
+                        ++adjacentMineCount;
+                    }
+                }
+            }
+        }
+
+        mineFieldButton->SetAdjacentMineCount(adjacentMineCount);
     }
 }
