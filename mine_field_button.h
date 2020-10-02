@@ -3,7 +3,7 @@
 #include <QPushButton>
 #include <QMouseEvent>
 
-class MineFieldButton : public QPushButton//, QMouseEvent
+class MineFieldButton : public QPushButton
 {
 public:
     MineFieldButton(int x, int y, int fieldNumber, QString text = "");
@@ -18,7 +18,8 @@ private:
     const int m_X;
     const int m_Y;
     const int m_FieldNumber;
-    const QString m_TextColor = "color: black";
+    const QString TEXT_COLOR = "color: black";
+    const int POINT_SIZE = 20;
     bool m_IsMine;
     int m_AdjacentMineCount;
 

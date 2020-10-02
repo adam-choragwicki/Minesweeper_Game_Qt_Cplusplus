@@ -26,7 +26,7 @@ GameWindow::GameWindow(int rowCount, int columnCount, QWidget* parent)
     {
         for(int y = 1; y <= COLUMN_COUNT; y++)
         {
-            MineFieldButton* mineFieldButton = new MineFieldButton(x, y, fieldNumber, QString::number(x) + "," + QString::number(y));
+            MineFieldButton* mineFieldButton = new MineFieldButton(x, y, fieldNumber, "");
             mineFieldButton->setFixedSize(BUTTON_SIZE, BUTTON_SIZE);
             mineFieldButtons.insert(Coordinates(x, y), mineFieldButton);
             m_MainGridLayout->addWidget(mineFieldButton, x, y);
@@ -76,7 +76,6 @@ void GameWindow::GenerateMines(QMap<Coordinates, MineFieldButton*>& mineFieldBut
         {
             if(randomNumber == mineFieldButton->GetFieldNumber())
             {
-                mineFieldButton->setText("MINE");
                 mineFieldButton->SetMine();
                 mineFieldButton->setStyleSheet("color: red");
             }
