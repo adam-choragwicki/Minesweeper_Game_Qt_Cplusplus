@@ -32,4 +32,6 @@ private:
     int m_ColumnCount;
 
     bool ValidateInput();
+
+    void closeEvent(QCloseEvent* closeEvent) override;
 };

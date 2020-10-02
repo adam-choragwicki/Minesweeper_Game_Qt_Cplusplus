@@ -28,7 +28,7 @@ void GameDimensionsDialogWindow::on_buttonBox_accepted()
 
 void GameDimensionsDialogWindow::on_buttonBox_rejected()
 {
-    exit(-1);
+    exit(0);
 }
 
 bool GameDimensionsDialogWindow::ValidateInput()
@@ -60,4 +60,9 @@ bool GameDimensionsDialogWindow::ValidateInput()
     m_ColumnCount = enteredColumnCount;
 
     return true;
+}
+
+void GameDimensionsDialogWindow::closeEvent(QCloseEvent* /*closeEvent*/)
+{
+    exit(0);
 }
