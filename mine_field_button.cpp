@@ -1,4 +1,5 @@
 #include "mine_field_button.h"
+#include <QMessageBox>
 #include <QDebug>
 
 MineFieldButton::MineFieldButton(int x, int y, int fieldNumber, QString textString) :
@@ -23,7 +24,47 @@ void MineFieldButton::TestMineField()
     if(m_IsMine == true)
     {
         qDebug() << "GAME OVER";
-        setText("M");
+
+        QMessageBox* pMessageBox = new QMessageBox(QMessageBox::Icon::Warning, "BOOM", "Oops");
+
+        QPushButton* p_ContinueButton = new QPushButton("Continue", pMessageBox);
+        QPushButton* p_RestartButton = new QPushButton("Restart", pMessageBox);
+        QPushButton* p_CloseButton = new QPushButton("Close", pMessageBox);
+
+        pMessageBox->addButton(p_ContinueButton, QMessageBox::NoRole);
+        pMessageBox->addButton(p_RestartButton, QMessageBox::NoRole);
+        pMessageBox->addButton(p_CloseButton, QMessageBox::NoRole);
+
+        //TODO Restart not supported yet
+        p_RestartButton->setEnabled(false);
+
+        int userInput = pMessageBox->exec();
+
+        enum BUTTON_MEANINGS
+        {
+            CONTINUE = 0,
+            RESTART = 1,
+            CLOSE = 2
+        };
+
+        qDebug() << "User input: " << userInput;
+
+        if(userInput == CONTINUE)
+        {
+            setText("M");
+        }
+        else if(userInput == RESTART)
+        {
+            //RESTART PLACEHOLDER
+        }
+        else if(userInput == CLOSE)
+        {
+            exit(0);
+        }
+        else
+        {
+            assert(false);
+        }
     }
     else
     {
@@ -31,14 +72,13 @@ void MineFieldButton::TestMineField()
     }
 }
 
-void MineFieldButton::MarkMine()
+void MineFieldButton::FlagMine()
 {
     if(m_IsMine == true)
     {
         setStyleSheet("color: green");
-
-        qDebug() << "MINE CORRECTLY DETECTED";
         setText("OK");
+        qDebug() << "MINE CORRECTLY DETECTED";
     }
     else
     {
@@ -54,6 +94,6 @@ void MineFieldButton::mousePressEvent(QMouseEvent* event)
     }
     else if(event->button() == Qt::MouseButton::RightButton)
     {
-        MarkMine();
+        FlagMine();
     }
 }

@@ -26,7 +26,7 @@ private:
     int m_AdjacentMineCount;
 
     void TestMineField();
-    void MarkMine();
+    void FlagMine();
 
     virtual void mousePressEvent(QMouseEvent* event) override;
 };
