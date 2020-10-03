@@ -5,9 +5,9 @@
 MineFieldButton::MineFieldButton(int x, int y, QString textString) :
     QPushButton(textString),
     COORDINATES(x, y),
-    m_IsMine(false),
-    m_AlreadyLeftClicked(false),
-    m_IsFlagged(false),
+    m_Mine(false),
+    m_AlreadyScanned(false),
+    m_Flagged(false),
     m_AdjacentMineCount(0)
 {
     setFixedSize(SIZE, SIZE);
@@ -21,7 +21,7 @@ MineFieldButton::MineFieldButton(int x, int y, QString textString) :
 
 void MineFieldButton::TestMineField()
 {
-    if(m_IsMine == true)
+    if(m_Mine == true)
     {
         setStyleSheet("color: red");
         setText("M");
@@ -74,14 +74,18 @@ void MineFieldButton::TestMineField()
         setText(QString::number(m_AdjacentMineCount));
     }
 
-    m_AlreadyLeftClicked = true;
+    m_AlreadyScanned = true;
 }
 
 void MineFieldButton::LeftClickAction()
 {
-    if(!m_AlreadyLeftClicked)
+    if(!m_AlreadyScanned)
     {
-        TestMineField();
+        if(!m_Flagged)
+        {
+            TestMineField();
+            emit FieldClicked();
+        }
     }
     else
     {
@@ -91,18 +95,20 @@ void MineFieldButton::LeftClickAction()
 
 void MineFieldButton::RightClickAction()
 {
-    if(!m_AlreadyLeftClicked)
+    if(!m_AlreadyScanned)
     {
-        if(m_IsFlagged == true)
+        if(m_Flagged == true)
         {
             setText("");
-            m_IsFlagged = false;
+            m_Flagged = false;
         }
         else
         {
             setText("X");
-            m_IsFlagged = true;
+            m_Flagged = true;
         }
+
+        emit FieldClicked();
     }
 }
 

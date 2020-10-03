@@ -15,6 +15,11 @@ class GameWindow : public QMainWindow
 public:
     GameWindow(int rowCount, int columnCount, QWidget* parent = nullptr);
     ~GameWindow();
+    void EndGame(bool isContinuePossible);
+
+private slots:
+    void GameTick();
+    void closeEvent(QCloseEvent* /*closeEvent*/);
 
 private:
     Ui::GameWindow *ui;
@@ -28,4 +33,5 @@ private:
 
     void GenerateMines(QMap<MineFieldButton::Coordinates, MineFieldButton*> &mineFieldButtons) const;
     void ScanForMines() const;
+    int CountFieldsWithoutMine();
 };
