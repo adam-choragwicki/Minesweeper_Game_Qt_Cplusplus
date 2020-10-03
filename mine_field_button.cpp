@@ -2,11 +2,9 @@
 #include <QMessageBox>
 #include <QDebug>
 
-MineFieldButton::MineFieldButton(int x, int y, int fieldNumber, QString textString) :
+MineFieldButton::MineFieldButton(int x, int y, QString textString) :
     QPushButton(textString),
-    X(x),
-    Y(y),
-    FIELD_NUMBER(fieldNumber),
+    COORDINATES(x, y),
     m_IsMine(false),
     m_AdjacentMineCount(0)
 {
@@ -23,6 +21,8 @@ void MineFieldButton::TestMineField()
 {
     if(m_IsMine == true)
     {
+        setText("M");
+
         qDebug() << "GAME OVER";
 
         QMessageBox* pMessageBox = new QMessageBox(QMessageBox::Icon::Warning, "BOOM", "Oops");
@@ -51,7 +51,7 @@ void MineFieldButton::TestMineField()
 
         if(userInput == CONTINUE)
         {
-            setText("M");
+            return;
         }
         else if(userInput == RESTART)
         {

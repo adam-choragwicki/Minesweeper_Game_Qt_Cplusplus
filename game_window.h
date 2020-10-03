@@ -17,17 +17,15 @@ public:
     ~GameWindow();
 
 private:
-    typedef QPair<int, int> Coordinates;
-
     Ui::GameWindow *ui;
     const int ROW_COUNT;
     const int COLUMN_COUNT;
     const int MINE_FIELD_COUNT = ROW_COUNT * COLUMN_COUNT;
     const double MINE_COVERAGE_PERCENTAGE = 0.2;
 
-    QMap<Coordinates, MineFieldButton*> mineFieldButtons;
+    QMap<MineFieldButton::Coordinates, MineFieldButton*> mineFieldButtons;
     QGridLayout* m_MainGridLayout;
 
-    void GenerateMines(QMap<Coordinates, MineFieldButton*> &mineFieldButtons) const;
+    void GenerateMines(QMap<MineFieldButton::Coordinates, MineFieldButton*> &mineFieldButtons) const;
     void ScanForMines() const;
 };

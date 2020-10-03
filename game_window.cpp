@@ -20,16 +20,13 @@ GameWindow::GameWindow(int rowCount, int columnCount, QWidget* parent)
 
     ui->centralwidget->setLayout(m_MainGridLayout);
 
-    int fieldNumber = 1;
-
     for(int x = 1; x <= ROW_COUNT; x++)
     {
         for(int y = 1; y <= COLUMN_COUNT; y++)
         {
-            MineFieldButton* mineFieldButton = new MineFieldButton(x, y, fieldNumber, "");
-            mineFieldButtons.insert(Coordinates(x, y), mineFieldButton);
+            MineFieldButton* mineFieldButton = new MineFieldButton(x, y, "");
+            mineFieldButtons.insert(MineFieldButton::Coordinates(x, y), mineFieldButton);
             m_MainGridLayout->addWidget(mineFieldButton, x, y);
-            ++fieldNumber;
         }
     }
 
@@ -43,7 +40,7 @@ GameWindow::~GameWindow()
     delete m_MainGridLayout;
 }
 
-void GameWindow::GenerateMines(QMap<Coordinates, MineFieldButton*>& mineFieldButtons) const
+void GameWindow::GenerateMines(QMap<MineFieldButton::Coordinates, MineFieldButton*>& mineFieldButtons) const
 {
     const int targetMineCount = ROW_COUNT * COLUMN_COUNT * MINE_COVERAGE_PERCENTAGE;
 
@@ -51,32 +48,33 @@ void GameWindow::GenerateMines(QMap<Coordinates, MineFieldButton*>& mineFieldBut
 
     QRandomGenerator* pRandomGenerator = QRandomGenerator::global();
 
-    QSet<int> randomNumbers;
+    QSet<MineFieldButton::Coordinates> minesCoordinates;
 
-    while(randomNumbers.size() != targetMineCount)
+    while(minesCoordinates.size() != targetMineCount)
     {
-        randomNumbers.insert(pRandomGenerator->bounded(1, MINE_FIELD_COUNT));
+        minesCoordinates.insert(MineFieldButton::Coordinates(pRandomGenerator->bounded(1, ROW_COUNT), pRandomGenerator->bounded(1, COLUMN_COUNT)));
     }
 
-    qDebug() << "Generated " << randomNumbers.size() << " mines";
+    qDebug() << "Generated " << minesCoordinates.size() << " mines";
 
-    assert(targetMineCount == randomNumbers.size());
+    assert(targetMineCount == minesCoordinates.size());
 
-    qDebug() << "Random numbers ";
+    qDebug() << "Mines coordinates ";
 
-    for(auto& number : randomNumbers)
+    for(auto& mineCoordinates : minesCoordinates)
     {
-        qDebug() << number;
+        qDebug() << mineCoordinates;
     }
 
-    for(const int& randomNumber : randomNumbers)
+    for(auto& mineCoordinates : minesCoordinates)
     {
         for(auto& mineFieldButton : mineFieldButtons)
         {
-            if(randomNumber == mineFieldButton->GetFieldNumber())
+            if(mineCoordinates == mineFieldButton->GetCoordinates())
             {
                 mineFieldButton->SetMine();
                 mineFieldButton->setStyleSheet("color: red");
+                break;
             }
         }
     }
@@ -96,19 +94,20 @@ void GameWindow::ScanForMines() const
         }
         else
         {
-            int x = mineFieldButton->GetX();
-            int y = mineFieldButton->GetY();
+            MineFieldButton::Coordinates coordinates = mineFieldButton->GetCoordinates();
+            int x = coordinates.first;
+            int y = coordinates.second;
 
             MineFieldButton* otherMineFieldButton = nullptr;
 
-            QVector<Coordinates> adjacentFieldsRelativeCoordinates = {Coordinates(x, y - 1),
-                                                                      Coordinates(x, y + 1),
-                                                                      Coordinates(x - 1, y),
-                                                                      Coordinates(x + 1, y),
-                                                                      Coordinates(x - 1, y - 1),
-                                                                      Coordinates(x - 1, y + 1),
-                                                                      Coordinates(x + 1, y - 1),
-                                                                      Coordinates(x + 1, y + 1)};
+            QVector<MineFieldButton::Coordinates> adjacentFieldsRelativeCoordinates = {MineFieldButton::Coordinates(x, y - 1),
+                                                                                       MineFieldButton::Coordinates(x, y + 1),
+                                                                                       MineFieldButton::Coordinates(x - 1, y),
+                                                                                       MineFieldButton::Coordinates(x + 1, y),
+                                                                                       MineFieldButton::Coordinates(x - 1, y - 1),
+                                                                                       MineFieldButton::Coordinates(x - 1, y + 1),
+                                                                                       MineFieldButton::Coordinates(x + 1, y - 1),
+                                                                                       MineFieldButton::Coordinates(x + 1, y + 1)};
 
             for(auto& coordinates : adjacentFieldsRelativeCoordinates)
             {
