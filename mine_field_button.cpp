@@ -3,16 +3,17 @@
 
 MineFieldButton::MineFieldButton(int x, int y, int fieldNumber, QString textString) :
     QPushButton(textString),
-    m_X(x),
-    m_Y(y),
-    m_FieldNumber(fieldNumber),
+    X(x),
+    Y(y),
+    FIELD_NUMBER(fieldNumber),
     m_IsMine(false),
     m_AdjacentMineCount(0)
 {
+    setFixedSize(SIZE, SIZE);
     setStyleSheet(TEXT_COLOR);
 
     QFont currentFont = font();
-    currentFont.setPointSize(POINT_SIZE);
+    currentFont.setPointSize(FONT_SIZE);
     currentFont.setBold(true);
     setFont(currentFont);
 }
@@ -22,7 +23,7 @@ void MineFieldButton::TestMineField()
     if(m_IsMine == true)
     {
         qDebug() << "GAME OVER";
-        setText("BOOM");
+        setText("M");
     }
     else
     {

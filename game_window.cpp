@@ -27,7 +27,6 @@ GameWindow::GameWindow(int rowCount, int columnCount, QWidget* parent)
         for(int y = 1; y <= COLUMN_COUNT; y++)
         {
             MineFieldButton* mineFieldButton = new MineFieldButton(x, y, fieldNumber, "");
-            mineFieldButton->setFixedSize(BUTTON_SIZE, BUTTON_SIZE);
             mineFieldButtons.insert(Coordinates(x, y), mineFieldButton);
             m_MainGridLayout->addWidget(mineFieldButton, x, y);
             ++fieldNumber;

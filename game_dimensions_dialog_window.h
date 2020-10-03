@@ -23,10 +23,10 @@ private slots:
 private:
     Ui::GameDimensionsDialogWindow* ui;
 
-    const int MIN_ROW_COUNT = 5;
-    const int MAX_ROW_COUNT = 10;
-    const int MIN_COLUMN_COUNT = 5;
-    const int MAX_COLUMN_COUNT = 10;
+    const int MIN_ROW_COUNT = 10;
+    const int MAX_ROW_COUNT = 40;
+    const int MIN_COLUMN_COUNT = 10;
+    const int MAX_COLUMN_COUNT = 40;
 
     int m_RowCount;
     int m_ColumnCount;
