@@ -34,12 +34,6 @@ GameWindow::GameWindow(int rowCount, int columnCount, QWidget* parent)
     ScanForMines();
 }
 
-GameWindow::~GameWindow()
-{
-    delete ui;
-    delete m_MainGridLayout;
-}
-
 void GameWindow::GenerateMines(QMap<MineFieldButton::Coordinates, MineFieldButton*>& mineFieldButtons) const
 {
     const int targetMineCount = ROW_COUNT * COLUMN_COUNT * MINE_COVERAGE_PERCENTAGE;
@@ -73,7 +67,6 @@ void GameWindow::GenerateMines(QMap<MineFieldButton::Coordinates, MineFieldButto
             if(mineCoordinates == mineFieldButton->GetCoordinates())
             {
                 mineFieldButton->SetMine();
-                mineFieldButton->setStyleSheet("color: red");
                 break;
             }
         }
@@ -125,4 +118,10 @@ void GameWindow::ScanForMines() const
 
         mineFieldButton->SetAdjacentMineCount(adjacentMineCount);
     }
+}
+
+GameWindow::~GameWindow()
+{
+    delete ui;
+    delete m_MainGridLayout;
 }

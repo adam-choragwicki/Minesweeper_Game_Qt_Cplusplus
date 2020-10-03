@@ -6,10 +6,12 @@ MineFieldButton::MineFieldButton(int x, int y, QString textString) :
     QPushButton(textString),
     COORDINATES(x, y),
     m_IsMine(false),
+    m_AlreadyLeftClicked(false),
+    m_IsFlagged(false),
     m_AdjacentMineCount(0)
 {
     setFixedSize(SIZE, SIZE);
-    setStyleSheet(TEXT_COLOR);
+    setStyleSheet(TEXT_DEFAULT_COLOR);
 
     QFont currentFont = font();
     currentFont.setPointSize(FONT_SIZE);
@@ -21,6 +23,7 @@ void MineFieldButton::TestMineField()
 {
     if(m_IsMine == true)
     {
+        setStyleSheet("color: red");
         setText("M");
 
         qDebug() << "GAME OVER";
@@ -51,7 +54,7 @@ void MineFieldButton::TestMineField()
 
         if(userInput == CONTINUE)
         {
-            return;
+            /*This case added just for explicity*/
         }
         else if(userInput == RESTART)
         {
@@ -70,19 +73,36 @@ void MineFieldButton::TestMineField()
     {
         setText(QString::number(m_AdjacentMineCount));
     }
+
+    m_AlreadyLeftClicked = true;
 }
 
-void MineFieldButton::FlagMine()
+void MineFieldButton::LeftClickAction()
 {
-    if(m_IsMine == true)
+    if(!m_AlreadyLeftClicked)
     {
-        setStyleSheet("color: green");
-        setText("OK");
-        qDebug() << "MINE CORRECTLY DETECTED";
+        TestMineField();
     }
     else
     {
-        setText("X");
+        qDebug() << "CLICK IGNORED";
+    }
+}
+
+void MineFieldButton::RightClickAction()
+{
+    if(!m_AlreadyLeftClicked)
+    {
+        if(m_IsFlagged == true)
+        {
+            setText("");
+            m_IsFlagged = false;
+        }
+        else
+        {
+            setText("X");
+            m_IsFlagged = true;
+        }
     }
 }
 
@@ -90,10 +110,12 @@ void MineFieldButton::mousePressEvent(QMouseEvent* event)
 {
     if(event->button() == Qt::MouseButton::LeftButton)
     {
-        TestMineField();
+        qDebug() << "LEFT CLICK";
+        LeftClickAction();
     }
     else if(event->button() == Qt::MouseButton::RightButton)
     {
-        FlagMine();
+        qDebug() << "RIGHT CLICK";
+        RightClickAction();
     }
 }

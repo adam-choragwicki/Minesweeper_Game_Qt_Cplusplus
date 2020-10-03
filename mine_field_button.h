@@ -18,13 +18,16 @@ private:
     const int SIZE = 30;
     const int FONT_SIZE = 20;
     const QPair<int, int> COORDINATES;
-    const QString TEXT_COLOR = "color: black";
+    const QString TEXT_DEFAULT_COLOR = "color: black";
 
     bool m_IsMine;
+    bool m_AlreadyLeftClicked;
+    bool m_IsFlagged;
     int m_AdjacentMineCount;
 
     void TestMineField();
-    void FlagMine();
+    void RightClickAction();
 
     virtual void mousePressEvent(QMouseEvent* event) override;
+    void LeftClickAction();
 };
