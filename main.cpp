@@ -6,6 +6,7 @@
 int main(int argc, char *argv[])
 {
     QApplication application(argc, argv);
+
     GameDimensionsDialogWindow gameDimensionsDialogWindow;
 
     while(true)
@@ -16,7 +17,21 @@ int main(int argc, char *argv[])
         }
     }
 
-    GameWindow gameWindow(gameDimensionsDialogWindow.GetRowCount(), gameDimensionsDialogWindow.GetColumnCount());
-    gameWindow.show();
-    return application.exec();
+    while(true)
+    {
+        GameWindow gameWindow(gameDimensionsDialogWindow.GetRowCount(), gameDimensionsDialogWindow.GetColumnCount());
+        gameWindow.show();
+
+        switch(application.exec())
+        {
+        case 0:
+            exit(0);
+            break;
+        case 1:
+            continue;
+            break;
+        }
+    }
+
+    return 0;
 }

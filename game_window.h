@@ -15,7 +15,6 @@ class GameWindow : public QMainWindow
 public:
     GameWindow(int rowCount, int columnCount, QWidget* parent = nullptr);
     ~GameWindow();
-    void EndGame(bool isContinuePossible);
 
 private slots:
     void GameTick();

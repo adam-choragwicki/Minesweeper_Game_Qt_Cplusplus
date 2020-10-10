@@ -9,12 +9,14 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    end_game_dialog.cpp \
     game_dimensions_dialog_window.cpp \
     game_window.cpp \
     main.cpp \
     mine_field_button.cpp
 
 HEADERS += \
+    end_game_dialog.h \
     game_dimensions_dialog_window.h \
     game_window.h \
     mine_field_button.h

@@ -1,6 +1,8 @@
 #include "mine_field_button.h"
+#include "end_game_dialog.h"
 #include <QMessageBox>
 #include <QDebug>
+#include <QApplication>
 
 MineFieldButton::MineFieldButton(int x, int y, QString textString) :
     QPushButton(textString),
@@ -28,46 +30,7 @@ void MineFieldButton::TestMineField()
 
         qDebug() << "GAME OVER";
 
-        QMessageBox* pMessageBox = new QMessageBox(QMessageBox::Icon::Warning, "BOOM", "Oops");
-
-        QPushButton* p_ContinueButton = new QPushButton("Continue", pMessageBox);
-        QPushButton* p_RestartButton = new QPushButton("Restart", pMessageBox);
-        QPushButton* p_CloseButton = new QPushButton("Close", pMessageBox);
-
-        pMessageBox->addButton(p_ContinueButton, QMessageBox::NoRole);
-        pMessageBox->addButton(p_RestartButton, QMessageBox::NoRole);
-        pMessageBox->addButton(p_CloseButton, QMessageBox::NoRole);
-
-        //TODO Restart not supported yet
-        p_RestartButton->setEnabled(false);
-
-        int userInput = pMessageBox->exec();
-
-        enum BUTTON_MEANINGS
-        {
-            CONTINUE = 0,
-            RESTART = 1,
-            CLOSE = 2
-        };
-
-        qDebug() << "User input: " << userInput;
-
-        if(userInput == CONTINUE)
-        {
-            /*This case added just for explicity*/
-        }
-        else if(userInput == RESTART)
-        {
-            //RESTART PLACEHOLDER
-        }
-        else if(userInput == CLOSE)
-        {
-            exit(0);
-        }
-        else
-        {
-            assert(false);
-        }
+        EndGameDialog(false);
     }
     else
     {
@@ -107,8 +70,6 @@ void MineFieldButton::RightClickAction()
             setText("X");
             m_Flagged = true;
         }
-
-        emit FieldClicked();
     }
 }
 

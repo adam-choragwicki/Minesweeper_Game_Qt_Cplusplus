@@ -24,9 +24,9 @@ private:
     Ui::GameDimensionsDialogWindow* ui;
 
     const int MIN_ROW_COUNT = 10;
-    const int MAX_ROW_COUNT = 40;
+    const int MAX_ROW_COUNT = 30;
     const int MIN_COLUMN_COUNT = 10;
-    const int MAX_COLUMN_COUNT = 40;
+    const int MAX_COLUMN_COUNT = 30;
 
     int m_RowCount;
     int m_ColumnCount;

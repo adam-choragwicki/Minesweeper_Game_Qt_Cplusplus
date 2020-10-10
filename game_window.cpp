@@ -1,8 +1,8 @@
 #include "game_window.h"
 #include "ui_game_window.h"
+#include "end_game_dialog.h"
 #include <QRandomGenerator>
 #include <QDebug>
-#include <QMessageBox>
 
 GameWindow::GameWindow(int rowCount, int columnCount, QWidget* parent)
     : QMainWindow(parent)
@@ -148,53 +148,7 @@ void GameWindow::GameTick()
 
     if(fieldsWithoutMineLeft == 0)
     {
-        EndGame(false);
-    }
-}
-
-void GameWindow::EndGame(bool isContinuePossible)
-{
-    QMessageBox* pMessageBox = new QMessageBox(QMessageBox::Icon::Warning, "BOOM", "Oops");
-
-    QPushButton* p_ContinueButton = new QPushButton("Continue", pMessageBox);
-    QPushButton* p_RestartButton = new QPushButton("Restart", pMessageBox);
-    QPushButton* p_CloseButton = new QPushButton("Close", pMessageBox);
-
-    pMessageBox->addButton(p_ContinueButton, QMessageBox::NoRole);
-    pMessageBox->addButton(p_RestartButton, QMessageBox::NoRole);
-    pMessageBox->addButton(p_CloseButton, QMessageBox::NoRole);
-
-    if(isContinuePossible == false)
-    {
-        p_ContinueButton->setEnabled(false);
-    }
-
-    int userInput = pMessageBox->exec();
-
-    enum BUTTON_MEANINGS
-    {
-        CONTINUE = 0,
-        RESTART = 1,
-        CLOSE = 2
-    };
-
-    qDebug() << "User input: " << userInput;
-
-    if(userInput == CONTINUE)
-    {
-        /*This case added just for explicity*/
-    }
-    else if(userInput == RESTART)
-    {
-        QCoreApplication::exit(1);
-    }
-    else if(userInput == CLOSE)
-    {
-        exit(0);
-    }
-    else
-    {
-        assert(false);
+        EndGameDialog(true);
     }
 }
 
@@ -202,6 +156,8 @@ GameWindow::~GameWindow()
 {
     delete ui;
     delete m_MainGridLayout;
+
+    /*Mine field buttons should be deleted when deleting layout*/
 }
 
 void GameWindow::closeEvent(QCloseEvent* /*closeEvent*/)
