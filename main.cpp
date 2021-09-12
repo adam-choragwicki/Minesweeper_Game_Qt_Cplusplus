@@ -8,30 +8,12 @@ int main(int argc, char *argv[])
     QApplication application(argc, argv);
 
     GameDimensionsDialogWindow gameDimensionsDialogWindow;
+    gameDimensionsDialogWindow.exec();
 
-    while(true)
-    {
-        if(gameDimensionsDialogWindow.exec() != -1)
-        {
-            break;
-        }
-    }
+    GameWindow gameWindow(gameDimensionsDialogWindow.getRowCount(), gameDimensionsDialogWindow.getColumnCount(), gameDimensionsDialogWindow.getMinePercentage());
 
-    while(true)
-    {
-        GameWindow gameWindow(gameDimensionsDialogWindow.GetRowCount(), gameDimensionsDialogWindow.GetColumnCount());
-        gameWindow.show();
-
-        switch(application.exec())
-        {
-        case 0:
-            exit(0);
-            break;
-        case 1:
-            continue;
-            break;
-        }
-    }
+    gameWindow.show();
+    application.exec();
 
     return 0;
 }

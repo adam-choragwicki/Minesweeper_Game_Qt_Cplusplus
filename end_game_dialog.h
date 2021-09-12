@@ -1,7 +1,11 @@
 #pragma once
 
-class EndGameDialog
+#include "common.h"
+
+#include <QMessageBox>
+
+class EndGameDialog : public QMessageBox
 {
 public:
-    EndGameDialog(bool win);
+    EndGameDialog(QWidget* parent, GameResult gameResult);
 };

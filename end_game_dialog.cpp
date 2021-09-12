@@ -1,50 +1,47 @@
 #include "end_game_dialog.h"
-#include <QMessageBox>
+
 #include <QPushButton>
 #include <QApplication>
 #include <QDebug>
 
-EndGameDialog::EndGameDialog(bool win)
+EndGameDialog::EndGameDialog(QWidget* parent, GameResult gameResult) : QMessageBox(parent)
 {
-    QMessageBox* pMessageBox;
-
-    if(win == true)
+    if(gameResult == GameResult::win)
     {
-        pMessageBox = new QMessageBox(QMessageBox::Icon::Warning, "Congratulations", "You win");
+        qDebug() << "GAME WIN";
+        setIcon(QMessageBox::Icon::Information);
+        setWindowTitle("Congratulations");
+        setText("You win");
     }
-    else
+    else if(gameResult == GameResult::lose)
     {
-        pMessageBox = new QMessageBox(QMessageBox::Icon::Warning, "BOOM", "Oops");
+        qDebug() << "GAME OVER";
+        setIcon(QMessageBox::Icon::Warning);
+        setWindowTitle("Game over");
+        setText("Oops, do you want to play again?");
     }
 
-    QPushButton* p_RestartButton = new QPushButton("Restart", pMessageBox);
-    QPushButton* p_CloseButton = new QPushButton("Close", pMessageBox);
+    setStyleSheet("color: black");
 
-    pMessageBox->addButton(p_RestartButton, QMessageBox::NoRole);
-    pMessageBox->addButton(p_CloseButton, QMessageBox::NoRole);
+    addButton(new QPushButton("Restart"), QMessageBox::NoRole);
+    addButton(new QPushButton("Close"), QMessageBox::NoRole);
 
-    int userInput = pMessageBox->exec();
+    int userInput = this->exec();
 
-    enum BUTTON_MEANINGS
+    enum buttonMeanings
     {
-        RESTART = 0,
-        CLOSE = 1
+        restart = 0,
+        close = 1
     };
 
     qDebug() << "User input: " << userInput;
 
-    if(userInput == RESTART)
+    if(userInput == restart)
     {
-        QCoreApplication::exit(1);
+        setResult(QMessageBox::Reset);
     }
-    else if(userInput == CLOSE)
+    else if(userInput == close)
     {
-        exit(0);
+        setResult(QMessageBox::Close);
     }
-    else
-    {
-        assert(false);
-    }
-
-    delete pMessageBox;
 }

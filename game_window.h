@@ -1,8 +1,10 @@
 #pragma once
 
+#include "game_engine.h"
+#include "field.h"
+
 #include <QMainWindow>
 #include "QGridLayout"
-#include "mine_field_button.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GameWindow; }
@@ -13,24 +15,24 @@ class GameWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    GameWindow(int rowCount, int columnCount, QWidget* parent = nullptr);
+    GameWindow(int rowCount, int columnCount, int minePercentage, QWidget* parent = nullptr);
     ~GameWindow();
 
-private slots:
-    void GameTick();
-    void closeEvent(QCloseEvent* /*closeEvent*/);
-
 private:
-    Ui::GameWindow *ui;
-    const int ROW_COUNT;
-    const int COLUMN_COUNT;
-    const int MINE_FIELD_COUNT = ROW_COUNT * COLUMN_COUNT;
-    const double MINE_COVERAGE_PERCENTAGE = 0.2;
+    void closeEvent(QCloseEvent*);
 
-    QMap<MineFieldButton::Coordinates, MineFieldButton*> mineFieldButtons;
-    QGridLayout* m_MainGridLayout;
+    void createFields();
 
-    void GenerateMines(QMap<MineFieldButton::Coordinates, MineFieldButton*> &mineFieldButtons) const;
-    void ScanForMines() const;
-    int CountFieldsWithoutMine();
+    Ui::GameWindow *ui_;
+    QGridLayout mainGridLayout_;
+    QMap<Coordinates, Field*> mineFieldButtons_;
+    std::unique_ptr<GameEngine> gameEngine_;
+
+    const int rowCount_;
+    const int columnCount_;
+    const int minePercentage_;
+
+private slots:
+    void processFieldClicked(ClickType clickType, const Coordinates& coordinates);
+    void processGameEnd(GameResult gameResult);
 };

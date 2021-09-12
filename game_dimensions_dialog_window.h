@@ -13,25 +13,20 @@ class GameDimensionsDialogWindow : public QDialog
 public:
     explicit GameDimensionsDialogWindow(QWidget* parent = nullptr);
     ~GameDimensionsDialogWindow();
-    int GetRowCount() {return m_RowCount;}
-    int GetColumnCount() {return m_ColumnCount;}
+
+    int getRowCount() const {return rowCount_;}
+    int getColumnCount() const {return columnCount_;}
+    int getMinePercentage() const {return minePercentage_;}
+
+private:
+    void reject() override;
+
+    Ui::GameDimensionsDialogWindow* ui_;
+
+    int rowCount_;
+    int columnCount_;
+    int minePercentage_;
 
 private slots:
     void on_buttonBox_accepted();
-    void on_buttonBox_rejected();
-
-private:
-    Ui::GameDimensionsDialogWindow* ui;
-
-    const int MIN_ROW_COUNT = 10;
-    const int MAX_ROW_COUNT = 30;
-    const int MIN_COLUMN_COUNT = 10;
-    const int MAX_COLUMN_COUNT = 30;
-
-    int m_RowCount;
-    int m_ColumnCount;
-
-    bool ValidateInput();
-
-    void closeEvent(QCloseEvent* closeEvent) override;
 };
