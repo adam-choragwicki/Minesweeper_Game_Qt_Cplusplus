@@ -1,4 +1,4 @@
-#include "end_game_dialog.h"
+#include "inc/end_game_dialog.h"
 
 #include <QPushButton>
 #include <QApplication>

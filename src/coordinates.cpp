@@ -1,5 +1,5 @@
-#include "coordinates.h"
-#include "common.h"
+#include "inc/coordinates.h"
+#include "inc/common.h"
 
 #include <stdexcept>
 

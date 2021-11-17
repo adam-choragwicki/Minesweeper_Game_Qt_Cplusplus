@@ -1,7 +1,7 @@
-#include "game_window.h"
+#include "inc/game_window.h"
 #include "ui_game_window.h"
-#include "end_game_dialog.h"
-#include "common.h"
+#include "inc/end_game_dialog.h"
+#include "inc/common.h"
 
 #include <QDebug>
 
