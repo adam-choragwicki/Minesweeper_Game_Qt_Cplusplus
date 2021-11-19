@@ -1,5 +1,5 @@
-#include "inc/field.h"
-#include "inc/end_game_dialog.h"
+#include "field.h"
+#include "end_game_dialog.h"
 
 #include <QMessageBox>
 #include <QDebug>

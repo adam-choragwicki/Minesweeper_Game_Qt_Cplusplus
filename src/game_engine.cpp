@@ -1,4 +1,4 @@
-#include "inc/game_engine.h"
+#include "game_engine.h"
 
 #include <QRandomGenerator>
 

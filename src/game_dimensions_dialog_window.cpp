@@ -1,6 +1,6 @@
-#include "inc/game_dimensions_dialog_window.h"
+#include "game_dimensions_dialog_window.h"
 #include "ui_game_dimensions_dialog_window.h"
-#include "inc/common.h"
+#include "common.h"
 
 #include <QMessageBox>
 #include <QLineEdit>

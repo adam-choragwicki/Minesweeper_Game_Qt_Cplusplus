@@ -1,5 +1,5 @@
-#include "inc/game_dimensions_dialog_window.h"
-#include "inc/game_window.h"
+#include "game_dimensions_dialog_window.h"
+#include "game_window.h"
 
 #include <QApplication>
 

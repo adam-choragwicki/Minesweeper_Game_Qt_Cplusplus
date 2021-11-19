@@ -1,0 +1,39 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(Minesweeper LANGUAGES CXX)
+
+set(QT_VERSION_MAJOR 6)
+set(CMAKE_CXX_STANDARD 14)
+
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
+set(PROJECT_DIR ${CMAKE_SOURCE_DIR})
+
+set(MAIN_PROJECT_INCLUDES_PATH ${PROJECT_DIR}/inc)
+set(MAIN_PROJECT_SOURCES_PATH ${PROJECT_DIR}/src)
+set(MAIN_PROJECT_UI_FORMS_PATH ${PROJECT_DIR}/ui_forms)
+set(RESOURCE_FILES_PATH ${PROJECT_DIR}/resource_files)
+
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${MAIN_PROJECT_UI_FORMS_PATH})
+
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+
+set(MAIN_PROJECT_SOURCES
+    ${MAIN_PROJECT_SOURCES_PATH}/main.cpp
+    ${MAIN_PROJECT_INCLUDES_PATH}/common.h
+    ${MAIN_PROJECT_INCLUDES_PATH}/game_window.h ${MAIN_PROJECT_SOURCES_PATH}/game_window.cpp ${MAIN_PROJECT_UI_FORMS_PATH}/game_window.ui
+    ${MAIN_PROJECT_INCLUDES_PATH}/game_engine.h ${MAIN_PROJECT_SOURCES_PATH}/game_engine.cpp
+    ${MAIN_PROJECT_INCLUDES_PATH}/game_dimensions_dialog_window.h ${MAIN_PROJECT_SOURCES_PATH}/game_dimensions_dialog_window.cpp ${MAIN_PROJECT_UI_FORMS_PATH}/game_dimensions_dialog_window.ui
+    ${MAIN_PROJECT_INCLUDES_PATH}/field.h ${MAIN_PROJECT_SOURCES_PATH}/field.cpp
+    ${MAIN_PROJECT_INCLUDES_PATH}/coordinates.h ${MAIN_PROJECT_SOURCES_PATH}/coordinates.cpp
+    ${MAIN_PROJECT_INCLUDES_PATH}/end_game_dialog.h ${MAIN_PROJECT_SOURCES_PATH}/end_game_dialog.cpp
+    ${RESOURCE_FILES_PATH}/images.qrc
+)
+
+add_executable(${PROJECT_NAME} WIN32 ${MAIN_PROJECT_SOURCES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${MAIN_PROJECT_INCLUDES_PATH})
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/executable_windows)
