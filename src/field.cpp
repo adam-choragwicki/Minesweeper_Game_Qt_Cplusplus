@@ -32,7 +32,7 @@ void Field::loadImages()
         throw std::runtime_error("Could not load :/images/images/flag.png");
     }
 
-    if(!flagPixmap->load(":/images/images/flag.png"))
+    if(!minePixmap->load(":/images/images/mine.png"))
     {
         throw std::runtime_error("Could not load :/images/images/mine.png");
     }
