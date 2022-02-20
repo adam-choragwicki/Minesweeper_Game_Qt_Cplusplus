@@ -27,8 +27,15 @@ void Field::loadImages()
     flagPixmap = std::make_unique<QPixmap>();
     minePixmap = std::make_unique<QPixmap>();
 
-    assert(flagPixmap->load(":/images/images/flag.png"));
-    assert(minePixmap->load(":/images/images/mine.png"));
+    if(!flagPixmap->load(":/images/images/flag.png"))
+    {
+        throw std::runtime_error("Could not load :/images/images/flag.png");
+    }
+
+    if(!flagPixmap->load(":/images/images/flag.png"))
+    {
+        throw std::runtime_error("Could not load :/images/images/mine.png");
+    }
 }
 
 void Field::reset()

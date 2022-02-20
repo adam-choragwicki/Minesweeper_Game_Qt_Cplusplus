@@ -28,7 +28,6 @@ void GameEngine::generateMines() const
     }
 
     qDebug() << "Generated " << mineCoordinatesSet.size() << " mines";
-    assert(targetMineCount == mineCoordinatesSet.size());
 
     for(auto& mineCoordinates : mineCoordinatesSet)
     {
