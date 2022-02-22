@@ -43,18 +43,18 @@ void GameWindow::createFields()
     {
         for(int y = 1; y <= columnCount_; y++)
         {
-            Field* mineFieldButton = new Field(x, y);
-            mineFieldButtons_.insert(Coordinates(x, y), mineFieldButton);
-            mainGridLayout_.addWidget(mineFieldButton, x, y);
+            std::shared_ptr<Field> mineFieldButton = std::make_shared<Field>(x, y);
+            mineFieldButtons_.insert(Coordinates(x, y),  mineFieldButton);
+            mainGridLayout_.addWidget(mineFieldButton.get(), x, y);
 
-            connect(mineFieldButton, &Field::clicked, this, &GameWindow::processFieldClicked);
+            connect(mineFieldButton.get(), &Field::clicked, this, &GameWindow::processFieldClicked);
         }
     }
 }
 
 void GameWindow::processFieldClicked(ClickType clickType, const Coordinates& coordinates)
 {
-    Field* field = mineFieldButtons_[coordinates];
+    std::shared_ptr<Field> field = mineFieldButtons_[coordinates];
 
     if(clickType == ClickType::left)
     {

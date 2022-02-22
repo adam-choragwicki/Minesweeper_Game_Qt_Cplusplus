@@ -10,10 +10,10 @@ class GameEngine : public QObject
     Q_OBJECT
 
 public:
-    GameEngine(int rowCount, int columnCount, int minePercentage, QMap<Coordinates, Field*>& mineFieldButtons);
+    GameEngine(int rowCount, int columnCount, int minePercentage, QMap<Coordinates, std::shared_ptr<Field>>& mineFieldButtons);
     void debugUncoverAll();
-    void processLeftClick(Field* field);
-    void processRightClick(Field* field);
+    void processLeftClick(std::shared_ptr<Field>& field);
+    void processRightClick(std::shared_ptr<Field>& field);
     void restartGame();
 
 signals:
@@ -23,14 +23,14 @@ private:
     void assignAdjacentMinesCountToAllFields() const;
     int countFieldsWithoutMine();
     QVector<Coordinates> calculateAdjacentFieldsCoordinates(const Coordinates& coordinates) const;
-    QVector<Field*> getAdjacentFields(const Coordinates& coordinates) const;
+    QVector<std::shared_ptr<Field>> getAdjacentFields(const Coordinates& coordinates) const;
     void generateMines() const;
     void processGameEnd(GameResult gameResult);
     void resetFields();
-    void uncoverAdjacentEmptyFields(Field* field);
-    void uncoverRecursively(Field* field);
+    void uncoverAdjacentEmptyFields(std::shared_ptr<Field>& field);
+    void uncoverRecursively(std::shared_ptr<Field>& field);
 
-    QMap<Coordinates, Field*>& mineFieldButtons_;
+    QMap<Coordinates, std::shared_ptr<Field>>& mineFieldButtons_;
     const int rowCount_;
     const int columnCount_;
     const int minePercentage_;

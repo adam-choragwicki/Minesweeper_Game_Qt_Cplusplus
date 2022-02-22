@@ -25,7 +25,7 @@ private:
 
     Ui::GameWindow *ui_;
     QGridLayout mainGridLayout_;
-    QMap<Coordinates, Field*> mineFieldButtons_;
+    QMap<Coordinates, std::shared_ptr<Field>> mineFieldButtons_;
     std::unique_ptr<GameEngine> gameEngine_;
 
     const int rowCount_;
