@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     GameDimensionsDialogWindow gameDimensionsDialogWindow;
     gameDimensionsDialogWindow.exec();
 
-    GameWindow gameWindow(gameDimensionsDialogWindow.getRowCount(), gameDimensionsDialogWindow.getColumnCount(), gameDimensionsDialogWindow.getMinePercentage());
+    GameWindow gameWindow(gameDimensionsDialogWindow.getGameParameters());
 
     gameWindow.show();
     application.exec();

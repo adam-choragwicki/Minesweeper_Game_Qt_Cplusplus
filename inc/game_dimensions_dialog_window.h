@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDialog>
+#include "common.h"
 
 namespace Ui {
 class GameDimensionsDialogWindow;
@@ -14,18 +15,13 @@ public:
     explicit GameDimensionsDialogWindow(QWidget* parent = nullptr);
     ~GameDimensionsDialogWindow() override;
 
-    [[nodiscard]] int getRowCount() const {return rowCount_;}
-    [[nodiscard]] int getColumnCount() const {return columnCount_;}
-    [[nodiscard]] int getMinePercentage() const {return minePercentage_;}
+    [[nodiscard]] GameParameters getGameParameters() const {return gameParameters_;}
 
 private:
     void reject() override;
 
     Ui::GameDimensionsDialogWindow* ui_;
-
-    int rowCount_;
-    int columnCount_;
-    int minePercentage_;
+    GameParameters gameParameters_;
 
 private slots:
     void on_buttonBox_accepted();

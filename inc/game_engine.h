@@ -2,6 +2,7 @@
 
 #include "coordinates.h"
 #include "field.h"
+#include "common.h"
 
 #include <QVector>
 
@@ -10,7 +11,7 @@ class GameEngine : public QObject
     Q_OBJECT
 
 public:
-    GameEngine(int rowCount, int columnCount, int minePercentage, QMap<Coordinates, std::shared_ptr<Field>>& mineFieldButtons);
+    GameEngine(const GameParameters& gameParameters, QMap<Coordinates, std::shared_ptr<Field>>& mineFieldButtons);
 
     [[maybe_unused]] void debugUncoverAll();
     void processLeftClick(std::shared_ptr<Field>& field);
@@ -31,8 +32,6 @@ private:
     void uncoverAdjacentEmptyFields(std::shared_ptr<Field>& field);
     void uncoverRecursively(std::shared_ptr<Field>& field);
 
+    const GameParameters gameParameters_;
     QMap<Coordinates, std::shared_ptr<Field>>& mineFieldButtons_;
-    const int rowCount_;
-    const int columnCount_;
-    const int minePercentage_;
 };

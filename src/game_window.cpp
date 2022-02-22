@@ -5,12 +5,9 @@
 
 #include <QDebug>
 
-GameWindow::GameWindow(int rowCount, int columnCount, int minePercentage, QWidget* parent)
+GameWindow::GameWindow(const GameParameters&& gameParameters, QWidget* parent)
     : QMainWindow(parent),
-      ui_(new Ui::GameWindow),
-      rowCount_(rowCount),
-      columnCount_(columnCount),
-      minePercentage_(minePercentage)
+      ui_(new Ui::GameWindow)
 {
     ui_->setupUi(this);
 
@@ -20,9 +17,9 @@ GameWindow::GameWindow(int rowCount, int columnCount, int minePercentage, QWidge
     ui_->centralwidget->setLayout(&mainGridLayout_);
 
     Field::loadImages();
-    createFields();
+    createFields(gameParameters.rowCount, gameParameters.columnCount);
 
-    gameEngine_ = std::make_unique<GameEngine>(rowCount_, columnCount_, minePercentage_, mineFieldButtons_);
+    gameEngine_ = std::make_unique<GameEngine>(gameParameters, mineFieldButtons_);
 
     connect(gameEngine_.get(), &GameEngine::gameEnd, this, &GameWindow::processGameEnd);
 }
@@ -37,11 +34,11 @@ void GameWindow::closeEvent(QCloseEvent*)
     exit(0);
 }
 
-void GameWindow::createFields()
+void GameWindow::createFields(int rowCount, int columnCount)
 {
-    for(int x = 1; x <= rowCount_; x++)
+    for(int x = 1; x <= rowCount; x++)
     {
-        for(int y = 1; y <= columnCount_; y++)
+        for(int y = 1; y <= columnCount; y++)
         {
             std::shared_ptr<Field> mineFieldButton = std::make_shared<Field>(x, y);
             mineFieldButtons_.insert(Coordinates(x, y),  mineFieldButton);

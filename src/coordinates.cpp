@@ -18,7 +18,7 @@ Coordinates::Coordinates(int row, int column)
 
 bool Coordinates::validateCoordinates(int row, int column)
 {
-    return (row >= 1 && row <= gameParameters::maxRowCount) && (column >= 1 && column <= gameParameters::maxColumnCount);
+    return (row >= 1 && row <= gameParametersLimits::maxRowCount) && (column >= 1 && column <= gameParametersLimits::maxColumnCount);
 }
 
 bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2)

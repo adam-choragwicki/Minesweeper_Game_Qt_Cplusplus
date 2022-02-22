@@ -2,11 +2,9 @@
 
 #include <QRandomGenerator>
 
-GameEngine::GameEngine(int rowCount, int columnCount, int minePercentage, QMap<Coordinates, std::shared_ptr<Field>>& mineFieldButtons) :
-    mineFieldButtons_(mineFieldButtons),
-    rowCount_(rowCount),
-    columnCount_(columnCount),
-    minePercentage_(minePercentage)
+GameEngine::GameEngine(const GameParameters& gameParameters, QMap<Coordinates, std::shared_ptr<Field>>& mineFieldButtons) :
+        gameParameters_(gameParameters),
+        mineFieldButtons_(mineFieldButtons)
 {
     generateMines();
     assignAdjacentMinesCountToAllFields();
@@ -14,7 +12,7 @@ GameEngine::GameEngine(int rowCount, int columnCount, int minePercentage, QMap<C
 
 void GameEngine::generateMines() const
 {
-    const int targetMineCount = static_cast<int>(rowCount_ * columnCount_ * (double(minePercentage_) / 100));
+    const int targetMineCount = static_cast<int>(gameParameters_.rowCount * gameParameters_.columnCount * (double(gameParameters_.minePercentage) / 100));
 
     qDebug() << "Target mine count: " << targetMineCount;
 
@@ -24,7 +22,7 @@ void GameEngine::generateMines() const
 
     while(mineCoordinatesSet.size() != targetMineCount)
     {
-        mineCoordinatesSet.insert(QPair<int, int>(randomGenerator->bounded(1, rowCount_), randomGenerator->bounded(1, columnCount_)));
+        mineCoordinatesSet.insert(QPair<int, int>(randomGenerator->bounded(1, gameParameters_.rowCount), randomGenerator->bounded(1, gameParameters_.columnCount)));
     }
 
     qDebug() << "Generated " << mineCoordinatesSet.size() << " mines";

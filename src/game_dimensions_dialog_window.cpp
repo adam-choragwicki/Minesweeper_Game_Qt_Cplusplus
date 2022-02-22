@@ -2,48 +2,27 @@
 #include "ui_game_dimensions_dialog_window.h"
 #include "common.h"
 
-#include <QMessageBox>
-#include <QLineEdit>
-
 GameDimensionsDialogWindow::GameDimensionsDialogWindow(QWidget *parent) :
     QDialog(parent),
     ui_(new Ui::GameDimensionsDialogWindow)
 {
     ui_->setupUi(this);
 
-    QStringList rowCountOptions;
-
-    for(int i = gameParameters::minRowCount; i <= gameParameters::maxRowCount; i++)
+    for(int i = 0, rowCountOption = gameParametersLimits::minRowCount; rowCountOption <= gameParametersLimits::maxRowCount; ++rowCountOption, ++i)
     {
-        rowCountOptions.append(QString::number(i));
-    }
-
-    ui_->rowCount_ComboBox->addItems(rowCountOptions);
-
-    for (int i = 0 ; i < ui_->rowCount_ComboBox->count() ; ++i)
-    {
+        ui_->rowCount_ComboBox->addItem(QString::number(rowCountOption));
         ui_->rowCount_ComboBox->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
     }
 
-    QStringList columnCountOptions;
-
-    for(int i = gameParameters::minColumnCount; i <= gameParameters::maxColumnCount; i++)
+    for(int i = 0, columnCountOption = gameParametersLimits::minColumnCount; columnCountOption <= gameParametersLimits::maxColumnCount; ++columnCountOption, ++i)
     {
-        columnCountOptions.append(QString::number(i));
-    }
-
-    ui_->columnCount_ComboBox->addItems(columnCountOptions);
-
-    for (int i = 0 ; i < ui_->columnCount_ComboBox->count() ; ++i)
-    {
+        ui_->columnCount_ComboBox->addItem(QString::number(columnCountOption));
         ui_->columnCount_ComboBox->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
     }
 
-    QStringList minePercentageOptions {"10", "20", "30"};
-    ui_->minesPercentage_ComboBox->addItems(minePercentageOptions);
-
-    for (int i = 0 ; i < ui_->minesPercentage_ComboBox->count() ; ++i)
+    for (int i = 0 ; i < gameParametersLimits::minePercentageOptions.size() ; ++i)
     {
+        ui_->minesPercentage_ComboBox->addItem(QString::number(gameParametersLimits::minePercentageOptions.at(i)));
         ui_->minesPercentage_ComboBox->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
     }
 }
@@ -53,14 +32,14 @@ GameDimensionsDialogWindow::~GameDimensionsDialogWindow()
     delete ui_;
 }
 
+void GameDimensionsDialogWindow::on_buttonBox_accepted()
+{
+    gameParameters_.rowCount = ui_->rowCount_ComboBox->currentText().toInt();
+    gameParameters_.columnCount = ui_->columnCount_ComboBox->currentText().toInt();
+    gameParameters_.minePercentage = ui_->minesPercentage_ComboBox->currentText().toInt();
+}
+
 void GameDimensionsDialogWindow::reject()
 {
     exit(0);
-}
-
-void GameDimensionsDialogWindow::on_buttonBox_accepted()
-{
-    rowCount_ = ui_->rowCount_ComboBox->currentText().toInt();
-    columnCount_ = ui_->columnCount_ComboBox->currentText().toInt();
-    minePercentage_ = ui_->minesPercentage_ComboBox->currentText().toInt();
 }
