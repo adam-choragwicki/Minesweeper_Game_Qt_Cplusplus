@@ -96,11 +96,11 @@ void Field::mousePressEvent(QMouseEvent* event)
 {
     if(event->button() == Qt::MouseButton::LeftButton)
     {
-        emit clicked(ClickType::left, coordinates_);
+        emit clickedSignal(ClickType::left, coordinates_);
     }
     else if(event->button() == Qt::MouseButton::RightButton)
     {
-        emit clicked(ClickType::right, coordinates_);
+        emit clickedSignal(ClickType::right, coordinates_);
     }
 }
 

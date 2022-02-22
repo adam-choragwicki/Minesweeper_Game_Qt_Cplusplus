@@ -16,10 +16,10 @@ class GameWindow : public QMainWindow
 
 public:
     GameWindow(int rowCount, int columnCount, int minePercentage, QWidget* parent = nullptr);
-    ~GameWindow();
+    ~GameWindow() override;
 
 private:
-    void closeEvent(QCloseEvent*);
+    void closeEvent(QCloseEvent*) override;
 
     void createFields();
 

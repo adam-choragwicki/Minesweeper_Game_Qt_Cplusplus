@@ -11,8 +11,8 @@ public:
 
     static bool validateCoordinates(int row, int column);
 
-    int getRow() const {return row_;}
-    int getColumn() const {return column_;}
+    [[nodiscard]] int getRow() const {return row_;}
+    [[nodiscard]] int getColumn() const {return column_;}
 
 private:
     int row_;

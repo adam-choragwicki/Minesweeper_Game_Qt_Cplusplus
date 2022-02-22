@@ -14,10 +14,10 @@ public:
 
     static void loadImages();
 
-    const Coordinates& getCoordinates() const {return coordinates_;}
-    bool isFlagged() const {return flagged_;}
-    bool isUncovered() const {return uncovered_;}
-    bool isMine() const {return mineIsPresent_;}
+    [[nodiscard]] const Coordinates& getCoordinates() const {return coordinates_;}
+    [[nodiscard]] bool isFlagged() const {return flagged_;}
+    [[nodiscard]] bool isUncovered() const {return uncovered_;}
+    [[nodiscard]] bool isMine() const {return mineIsPresent_;}
 
     void setAdjacentMineCount(int adjacentMineCount) {adjacentMineCount_ = adjacentMineCount;}
     void setMine();
@@ -27,10 +27,10 @@ public:
     int uncover();
 
 signals:
-    void clicked(ClickType clickType, const Coordinates& coordinates);
+    void clickedSignal(ClickType clickType, const Coordinates& coordinates);
 
 private:
-    virtual void mousePressEvent(QMouseEvent* event) override;
+    void mousePressEvent(QMouseEvent* event) override;
 
     void showAdjacentMineCount();
     void showFlag();
@@ -44,8 +44,8 @@ private:
     const Coordinates coordinates_;
     const QString textDefaultColor_ = "color: black";
 
-    bool mineIsPresent_;
-    bool uncovered_;
-    bool flagged_;
-    int adjacentMineCount_;
+    bool mineIsPresent_{};
+    bool uncovered_{};
+    bool flagged_{};
+    int adjacentMineCount_{};
 };

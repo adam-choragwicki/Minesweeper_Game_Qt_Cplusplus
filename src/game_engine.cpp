@@ -14,7 +14,7 @@ GameEngine::GameEngine(int rowCount, int columnCount, int minePercentage, QMap<C
 
 void GameEngine::generateMines() const
 {
-    const int targetMineCount = rowCount_ * columnCount_ * (double(minePercentage_) / 100);
+    const int targetMineCount = static_cast<int>(rowCount_ * columnCount_ * (double(minePercentage_) / 100));
 
     qDebug() << "Target mine count: " << targetMineCount;
 
@@ -64,15 +64,15 @@ void GameEngine::assignAdjacentMinesCountToAllFields() const
         }
         else
         {
-            Coordinates coordinates = mineFieldButton->getCoordinates();
+            Coordinates currentFieldCoordinates = mineFieldButton->getCoordinates();
 
             std::shared_ptr<Field> otherMineFieldButton;
 
-            QVector<Coordinates> adjacentFieldsRelativeCoordinates = calculateAdjacentFieldsCoordinates(coordinates);
+            QVector<Coordinates> allAdjacentFieldsCoordinates = calculateAdjacentFieldsCoordinates(currentFieldCoordinates);
 
-            for(auto& coordinates : adjacentFieldsRelativeCoordinates)
+            for(auto& adjacentFieldCoordinates : allAdjacentFieldsCoordinates)
             {
-                otherMineFieldButton = mineFieldButtons_.value(coordinates, nullptr);
+                otherMineFieldButton = mineFieldButtons_.value(adjacentFieldCoordinates, nullptr);
 
                 if(otherMineFieldButton)
                 {
@@ -99,11 +99,11 @@ void GameEngine::uncoverRecursively(std::shared_ptr<Field>& field)
     {
         QVector<std::shared_ptr<Field>> adjacentFields = getAdjacentFields(field->getCoordinates());
 
-        for(auto& field : adjacentFields)
+        for(auto& adjacentField : adjacentFields)
         {
-            if(!field->isUncovered())
+            if(!adjacentField->isUncovered())
             {
-                uncoverRecursively(field);
+                uncoverRecursively(adjacentField);
             }
         }
     }
@@ -115,12 +115,12 @@ void GameEngine::uncoverRecursively(std::shared_ptr<Field>& field)
 
 QVector<std::shared_ptr<Field>> GameEngine::getAdjacentFields(const Coordinates& coordinates) const
 {
-    QVector<Coordinates> adjacentFieldsRelativeCoordinates = calculateAdjacentFieldsCoordinates(coordinates);
+    QVector<Coordinates> adjacentFieldsCoordinates = calculateAdjacentFieldsCoordinates(coordinates);
     QVector<std::shared_ptr<Field>> adjacentFields;
 
-    for(auto& coordinates : adjacentFieldsRelativeCoordinates)
+    for(auto& adjacentFieldCoordinates : adjacentFieldsCoordinates)
     {
-        std::shared_ptr<Field> field = mineFieldButtons_.value(coordinates, nullptr);
+        std::shared_ptr<Field> field = mineFieldButtons_.value(adjacentFieldCoordinates, nullptr);
 
         if(field)
         {
@@ -133,14 +133,14 @@ QVector<std::shared_ptr<Field>> GameEngine::getAdjacentFields(const Coordinates&
 
 QVector<Coordinates> GameEngine::calculateAdjacentFieldsCoordinates(const Coordinates& coordinates) const
 {
-    const QVector<QPair<int, int>> adjacentFieldsOffsets = {{0, -1},
-                                                            {0, +1},
-                                                            {-1, 0},
-                                                            {+1, 0},
-                                                            {-1, -1},
-                                                            {-1, +1},
-                                                            {+1, -1},
-                                                            {+1, +1}};
+    static const QVector<QPair<int, int>> adjacentFieldsOffsets = {{0, -1},
+                                                                   {0, +1},
+                                                                   {-1, 0},
+                                                                   {+1, 0},
+                                                                   {-1, -1},
+                                                                   {-1, +1},
+                                                                   {+1, -1},
+                                                                   {+1, +1}};
 
     QVector<Coordinates> adjacentFieldsCoordinates;
 
@@ -213,7 +213,7 @@ void GameEngine::processRightClick(std::shared_ptr<Field>& field)
     }
 }
 
-void GameEngine::debugUncoverAll()
+[[maybe_unused]] void GameEngine::debugUncoverAll()
 {
     for(auto& mineField : mineFieldButtons_)
     {

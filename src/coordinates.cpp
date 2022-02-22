@@ -37,10 +37,6 @@ bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2)
         {
             return true;
         }
-        else if(coordinates1.getColumn() > coordinates2.getColumn())
-        {
-            return false;
-        }
         else
         {
             return false;

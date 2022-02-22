@@ -47,7 +47,7 @@ void GameWindow::createFields()
             mineFieldButtons_.insert(Coordinates(x, y),  mineFieldButton);
             mainGridLayout_.addWidget(mineFieldButton.get(), x, y);
 
-            connect(mineFieldButton.get(), &Field::clicked, this, &GameWindow::processFieldClicked);
+            connect(mineFieldButton.get(), &Field::clickedSignal, this, &GameWindow::processFieldClicked);
         }
     }
 }

@@ -12,11 +12,11 @@ class GameDimensionsDialogWindow : public QDialog
 
 public:
     explicit GameDimensionsDialogWindow(QWidget* parent = nullptr);
-    ~GameDimensionsDialogWindow();
+    ~GameDimensionsDialogWindow() override;
 
-    int getRowCount() const {return rowCount_;}
-    int getColumnCount() const {return columnCount_;}
-    int getMinePercentage() const {return minePercentage_;}
+    [[nodiscard]] int getRowCount() const {return rowCount_;}
+    [[nodiscard]] int getColumnCount() const {return columnCount_;}
+    [[nodiscard]] int getMinePercentage() const {return minePercentage_;}
 
 private:
     void reject() override;

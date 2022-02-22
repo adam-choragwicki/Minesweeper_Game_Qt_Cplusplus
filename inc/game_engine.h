@@ -11,7 +11,8 @@ class GameEngine : public QObject
 
 public:
     GameEngine(int rowCount, int columnCount, int minePercentage, QMap<Coordinates, std::shared_ptr<Field>>& mineFieldButtons);
-    void debugUncoverAll();
+
+    [[maybe_unused]] void debugUncoverAll();
     void processLeftClick(std::shared_ptr<Field>& field);
     void processRightClick(std::shared_ptr<Field>& field);
     void restartGame();
@@ -22,8 +23,8 @@ signals:
 private:
     void assignAdjacentMinesCountToAllFields() const;
     int countFieldsWithoutMine();
-    QVector<Coordinates> calculateAdjacentFieldsCoordinates(const Coordinates& coordinates) const;
-    QVector<std::shared_ptr<Field>> getAdjacentFields(const Coordinates& coordinates) const;
+    [[nodiscard]] QVector<Coordinates> calculateAdjacentFieldsCoordinates(const Coordinates& coordinates) const;
+    [[nodiscard]] QVector<std::shared_ptr<Field>> getAdjacentFields(const Coordinates& coordinates) const;
     void generateMines() const;
     void processGameEnd(GameResult gameResult);
     void resetFields();
