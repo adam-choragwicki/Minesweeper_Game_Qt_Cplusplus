@@ -2,9 +2,9 @@
 
 #include <QRandomGenerator>
 
-GameEngine::GameEngine(const GameParameters& gameParameters, QMap<Coordinates, std::shared_ptr<Field>>& mineFieldButtons) :
+GameEngine::GameEngine(const GameParameters& gameParameters, CoordinatesToFieldsMapping& coordinatesToFieldMapping) :
         gameParameters_(gameParameters),
-        mineFieldButtons_(mineFieldButtons)
+        coordinatesToFieldsMapping_(coordinatesToFieldMapping)
 {
     generateMines();
     assignAdjacentMinesCountToAllFields();
@@ -29,13 +29,13 @@ void GameEngine::generateMines() const
 
     for(auto& mineCoordinates : mineCoordinatesSet)
     {
-        mineFieldButtons_[Coordinates(mineCoordinates.first, mineCoordinates.second)]->setMine();
+        coordinatesToFieldsMapping_[Coordinates(mineCoordinates.first, mineCoordinates.second)]->setMine();
     }
 }
 
 void GameEngine::resetFields()
 {
-    for(auto& field : mineFieldButtons_)
+    for(auto& field : coordinatesToFieldsMapping_)
     {
         field->reset();
     }
@@ -50,31 +50,29 @@ void GameEngine::restartGame()
 
 void GameEngine::assignAdjacentMinesCountToAllFields() const
 {
-    for(auto& mineFieldButton : mineFieldButtons_)
+    for(auto& field : coordinatesToFieldsMapping_)
     {
         int adjacentMineCount = 0;
 
-        if(mineFieldButton->isMine())
+        if(field->isMine())
         {
-            /*If a field is mine itself an adjacent mine count is irrelevant*/
-            mineFieldButton->setAdjacentMineCount(-1);
+            /*If a field is a mine itself an adjacent mine count is irrelevant*/
+            field->setAdjacentMineCount(-1);
             continue;
         }
         else
         {
-            Coordinates currentFieldCoordinates = mineFieldButton->getCoordinates();
-
-            std::shared_ptr<Field> otherMineFieldButton;
+            Coordinates currentFieldCoordinates = field->getCoordinates();
 
             QVector<Coordinates> allAdjacentFieldsCoordinates = calculateAdjacentFieldsCoordinates(currentFieldCoordinates);
 
             for(auto& adjacentFieldCoordinates : allAdjacentFieldsCoordinates)
             {
-                otherMineFieldButton = mineFieldButtons_.value(adjacentFieldCoordinates, nullptr);
+                std::shared_ptr<Field> otherField = coordinatesToFieldsMapping_.value(adjacentFieldCoordinates, nullptr);
 
-                if(otherMineFieldButton)
+                if(otherField)
                 {
-                    if(otherMineFieldButton->isMine())
+                    if(otherField->isMine())
                     {
                         ++adjacentMineCount;
                     }
@@ -82,7 +80,7 @@ void GameEngine::assignAdjacentMinesCountToAllFields() const
             }
         }
 
-        mineFieldButton->setAdjacentMineCount(adjacentMineCount);
+        field->setAdjacentMineCount(adjacentMineCount);
     }
 }
 
@@ -118,7 +116,7 @@ QVector<std::shared_ptr<Field>> GameEngine::getAdjacentFields(const Coordinates&
 
     for(auto& adjacentFieldCoordinates : adjacentFieldsCoordinates)
     {
-        std::shared_ptr<Field> field = mineFieldButtons_.value(adjacentFieldCoordinates, nullptr);
+        std::shared_ptr<Field> field = coordinatesToFieldsMapping_.value(adjacentFieldCoordinates, nullptr);
 
         if(field)
         {
@@ -160,9 +158,9 @@ int GameEngine::countFieldsWithoutMine()
 {
     int counter = 0;
 
-    for(auto& mineFieldButton : mineFieldButtons_)
+    for(auto& field : coordinatesToFieldsMapping_)
     {
-        if((!mineFieldButton->isMine()) && !mineFieldButton->isUncovered())
+        if((!field->isMine()) && !field->isUncovered())
         {
             ++counter;
         }
@@ -213,8 +211,8 @@ void GameEngine::processRightClick(std::shared_ptr<Field>& field)
 
 [[maybe_unused]] void GameEngine::debugUncoverAll()
 {
-    for(auto& mineField : mineFieldButtons_)
+    for(auto& field : coordinatesToFieldsMapping_)
     {
-        mineField->uncover();
+        field->uncover();
     }
 }

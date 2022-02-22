@@ -1,6 +1,13 @@
 #pragma once
 
 #include <array>
+#include <memory>
+#include <QMap>
+
+class Coordinates;
+class Field;
+
+using CoordinatesToFieldsMapping = QMap<Coordinates, std::shared_ptr<Field>>;
 
 enum class GameResult
 {

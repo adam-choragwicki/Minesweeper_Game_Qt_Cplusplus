@@ -11,7 +11,7 @@ class GameEngine : public QObject
     Q_OBJECT
 
 public:
-    GameEngine(const GameParameters& gameParameters, QMap<Coordinates, std::shared_ptr<Field>>& mineFieldButtons);
+    GameEngine(const GameParameters& gameParameters, CoordinatesToFieldsMapping& coordinatesToFieldMapping);
 
     [[maybe_unused]] void debugUncoverAll();
     void processLeftClick(std::shared_ptr<Field>& field);
@@ -33,5 +33,5 @@ private:
     void uncoverRecursively(std::shared_ptr<Field>& field);
 
     const GameParameters gameParameters_;
-    QMap<Coordinates, std::shared_ptr<Field>>& mineFieldButtons_;
+    CoordinatesToFieldsMapping& coordinatesToFieldsMapping_;
 };

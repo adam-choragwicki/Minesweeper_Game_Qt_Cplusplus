@@ -26,7 +26,7 @@ private:
 
     Ui::GameWindow *ui_;
     QGridLayout mainGridLayout_;
-    QMap<Coordinates, std::shared_ptr<Field>> mineFieldButtons_;
+    CoordinatesToFieldsMapping coordinatesToFieldsMapping_;
     std::unique_ptr<GameEngine> gameEngine_;
 
 private slots:
