@@ -46,7 +46,7 @@ void Field::reset()
     setIcon(QIcon());
 
     mineIsPresent_ = false;
-    uncovered_ = false;
+    covered_ = true;
     flagged_ = false;
     adjacentMineCount_ = 0;
 }
@@ -87,7 +87,7 @@ int Field::uncover()
     else
     {
         showAdjacentMineCount();
-        uncovered_ = true;
+        covered_ = false;
         return adjacentMineCount_;
     }
 }

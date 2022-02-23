@@ -16,7 +16,7 @@ public:
 
     [[nodiscard]] const Coordinates& getCoordinates() const {return coordinates_;}
     [[nodiscard]] bool isFlagged() const {return flagged_;}
-    [[nodiscard]] bool isUncovered() const {return uncovered_;}
+    [[nodiscard]] bool isCovered() const {return covered_;}
     [[nodiscard]] bool isMine() const {return mineIsPresent_;}
 
     void setAdjacentMineCount(int adjacentMineCount) {adjacentMineCount_ = adjacentMineCount;}
@@ -45,7 +45,7 @@ private:
     const QString textDefaultColor_ = "color: black";
 
     bool mineIsPresent_{};
-    bool uncovered_{};
+    bool covered_{};
     bool flagged_{};
     int adjacentMineCount_{};
 };
