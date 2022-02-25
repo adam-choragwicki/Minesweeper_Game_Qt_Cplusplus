@@ -17,9 +17,10 @@ GameWindow::GameWindow(const GameParameters&& gameParameters, QWidget* parent)
     ui_->centralwidget->setLayout(&mainGridLayout_);
 
     Field::loadImages();
-    createFields(gameParameters.rowCount, gameParameters.columnCount);
 
-    gameEngine_ = std::make_unique<GameEngine>(gameParameters, coordinatesToFieldsMapping_);
+    gameEngine_ = std::make_unique<GameEngine>(gameParameters);
+
+    drawFields();
 
     connect(gameEngine_.get(), &GameEngine::gameEnd, this, &GameWindow::processGameEnd);
 }
@@ -34,24 +35,21 @@ void GameWindow::closeEvent(QCloseEvent*)
     exit(0);
 }
 
-void GameWindow::createFields(int rowCount, int columnCount)
+void GameWindow::drawFields()
 {
-    for(int x = 1; x <= rowCount; x++)
+    for (const auto& field: gameEngine_->getCoordinatesToFieldsMapping())
     {
-        for(int y = 1; y <= columnCount; y++)
-        {
-            std::shared_ptr<Field> field = std::make_shared<Field>(x, y);
-            coordinatesToFieldsMapping_.insert(Coordinates(x, y), field);
-            mainGridLayout_.addWidget(field.get(), x, y);
+        const int x = field->getCoordinates().getRow();
+        const int y = field->getCoordinates().getColumn();
 
-            connect(field.get(), &Field::clickedSignal, this, &GameWindow::processFieldClicked);
-        }
+        mainGridLayout_.addWidget(field.get(), x, y);
+        connect(field.get(), &Field::clickedSignal, this, &GameWindow::processFieldClicked);
     }
 }
 
 void GameWindow::processFieldClicked(ClickType clickType, const Coordinates& coordinates)
 {
-    std::shared_ptr<Field> field = coordinatesToFieldsMapping_[coordinates];
+    std::shared_ptr<Field> field = gameEngine_->getCoordinatesToFieldsMapping()[coordinates];
 
     if(clickType == ClickType::left)
     {

@@ -22,11 +22,10 @@ public:
 private:
     void closeEvent(QCloseEvent*) override;
 
-    void createFields(int rowCount, int columnCount);
+    void drawFields();
 
     Ui::GameWindow *ui_;
     QGridLayout mainGridLayout_;
-    CoordinatesToFieldsMapping coordinatesToFieldsMapping_;
     std::unique_ptr<GameEngine> gameEngine_;
 
 private slots:

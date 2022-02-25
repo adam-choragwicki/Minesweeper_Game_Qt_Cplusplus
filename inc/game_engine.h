@@ -11,21 +11,23 @@ class GameEngine : public QObject
     Q_OBJECT
 
 public:
-    GameEngine(const GameParameters& gameParameters, CoordinatesToFieldsMapping& coordinatesToFieldMapping);
+    explicit GameEngine(const GameParameters& gameParameters);
 
     [[maybe_unused]] void debugUncoverAllFields();
     void processLeftClick(std::shared_ptr<Field>& field);
     void processRightClick(std::shared_ptr<Field>& field);
     void restartGame();
+    CoordinatesToFieldsMapping& getCoordinatesToFieldsMapping() {return coordinatesToFieldsMapping_;}
 
 signals:
     void gameEnd(GameResult gameResult);
 
 private:
     void assignAdjacentMinesCountToAllFields() const;
-    int countCoveredFieldsWithoutMine() const;
+    [[nodiscard]] int countCoveredFieldsWithoutMine() const;
     [[nodiscard]] QVector<Coordinates> generateAdjacentFieldsCoordinates(const Coordinates& coordinates) const;
     [[nodiscard]] QVector<std::shared_ptr<Field>> getAdjacentFields(const Coordinates& coordinates) const;
+    void createFields(int rowCount, int columnCount);
     void generateMines() const;
     void processGameEnd(GameResult gameResult);
     void resetFields();
@@ -33,5 +35,5 @@ private:
     void uncoverRecursively(std::shared_ptr<Field>& field);
 
     const GameParameters gameParameters_;
-    CoordinatesToFieldsMapping& coordinatesToFieldsMapping_;
+    CoordinatesToFieldsMapping coordinatesToFieldsMapping_;
 };

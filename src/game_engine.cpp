@@ -2,12 +2,24 @@
 
 #include <QRandomGenerator>
 
-GameEngine::GameEngine(const GameParameters& gameParameters, CoordinatesToFieldsMapping& coordinatesToFieldMapping) :
-        gameParameters_(gameParameters),
-        coordinatesToFieldsMapping_(coordinatesToFieldMapping)
+GameEngine::GameEngine(const GameParameters& gameParameters) :
+        gameParameters_(gameParameters)
 {
+    createFields(gameParameters.rowCount, gameParameters.columnCount);
     generateMines();
     assignAdjacentMinesCountToAllFields();
+}
+
+void GameEngine::createFields(int rowCount, int columnCount)
+{
+    for(int x = 1; x <= rowCount; x++)
+    {
+        for(int y = 1; y <= columnCount; y++)
+        {
+            std::shared_ptr<Field> field = std::make_shared<Field>(x, y);
+            coordinatesToFieldsMapping_.insert(Coordinates(x, y), field);
+        }
+    }
 }
 
 void GameEngine::generateMines() const
