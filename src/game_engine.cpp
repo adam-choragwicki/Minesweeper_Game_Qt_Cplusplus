@@ -17,7 +17,7 @@ void GameEngine::createFields(int rowCount, int columnCount)
         for(int y = 1; y <= columnCount; y++)
         {
             std::shared_ptr<Field> field = std::make_shared<Field>(x, y);
-            coordinatesToFieldsMapping_.insert(Coordinates(x, y), field);
+            minefield_.addField(field);
         }
     }
 }
@@ -41,13 +41,13 @@ void GameEngine::generateMines() const
 
     for(auto& mineCoordinates : mineCoordinatesSet)
     {
-        coordinatesToFieldsMapping_[Coordinates(mineCoordinates.first, mineCoordinates.second)]->setMine();
+        minefield_[Coordinates(mineCoordinates.first, mineCoordinates.second)]->setMine();
     }
 }
 
 void GameEngine::resetFields()
 {
-    for(auto& field : coordinatesToFieldsMapping_)
+    for(auto& field : minefield_)
     {
         field->reset();
     }
@@ -62,7 +62,7 @@ void GameEngine::restartGame()
 
 void GameEngine::assignAdjacentMinesCountToAllFields() const
 {
-    for(auto& field : coordinatesToFieldsMapping_)
+    for(auto& field : minefield_)
     {
         int adjacentMineCount = 0;
 
@@ -80,9 +80,9 @@ void GameEngine::assignAdjacentMinesCountToAllFields() const
 
             for(auto& adjacentFieldCoordinates : allAdjacentFieldsCoordinates)
             {
-                std::shared_ptr<Field> otherField = coordinatesToFieldsMapping_.value(adjacentFieldCoordinates, nullptr);
+                std::shared_ptr<Field> otherField = minefield_[adjacentFieldCoordinates];
 
-                if (otherField && otherField->isMine())
+                if(otherField && otherField->isMine())
                 {
                     ++adjacentMineCount;
                 }
@@ -125,7 +125,7 @@ QVector<std::shared_ptr<Field>> GameEngine::getAdjacentFields(const Coordinates&
 
     for(auto& adjacentFieldCoordinates : adjacentFieldsCoordinates)
     {
-        std::shared_ptr<Field> field = coordinatesToFieldsMapping_.value(adjacentFieldCoordinates, nullptr);
+        std::shared_ptr<Field> field = minefield_[adjacentFieldCoordinates];
 
         if(field)
         {
@@ -167,7 +167,7 @@ int GameEngine::countCoveredFieldsWithoutMine() const
 {
     int counter = 0;
 
-    for(auto& field : coordinatesToFieldsMapping_)
+    for(auto& field : minefield_)
     {
         if(field->isCovered() && !field->isMine())
         {
@@ -220,7 +220,7 @@ void GameEngine::processRightClick(std::shared_ptr<Field>& field)
 
 [[maybe_unused]] void GameEngine::debugUncoverAllFields()
 {
-    for(auto& field : coordinatesToFieldsMapping_)
+    for(auto& field : minefield_)
     {
         field->uncover();
     }

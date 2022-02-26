@@ -3,6 +3,7 @@
 #include "coordinates.h"
 #include "field.h"
 #include "common.h"
+#include "minefield.h"
 
 #include <QVector>
 
@@ -17,7 +18,7 @@ public:
     void processLeftClick(std::shared_ptr<Field>& field);
     void processRightClick(std::shared_ptr<Field>& field);
     void restartGame();
-    CoordinatesToFieldsMapping& getCoordinatesToFieldsMapping() {return coordinatesToFieldsMapping_;}
+    CoordinatesToFieldsMapping& getCoordinatesToFieldsMapping() {return minefield_.getCoordinatesToFieldsMapping();}
 
 signals:
     void gameEnd(GameResult gameResult);
@@ -35,5 +36,5 @@ private:
     void uncoverRecursively(std::shared_ptr<Field>& field);
 
     const GameParameters gameParameters_;
-    CoordinatesToFieldsMapping coordinatesToFieldsMapping_;
+    Minefield minefield_;
 };

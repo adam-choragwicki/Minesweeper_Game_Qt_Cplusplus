@@ -3,8 +3,6 @@
 #include "end_game_dialog.h"
 #include "common.h"
 
-#include <QDebug>
-
 GameWindow::GameWindow(const GameParameters&& gameParameters, QWidget* parent)
     : QMainWindow(parent),
       ui_(new Ui::GameWindow)

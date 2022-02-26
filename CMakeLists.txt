@@ -28,7 +28,7 @@ set(SOURCE_FILES
     ${INCLUDES_DIR}/field.h ${SOURCES_DIR}/field.cpp
     ${INCLUDES_DIR}/coordinates.h ${SOURCES_DIR}/coordinates.cpp
     ${INCLUDES_DIR}/end_game_dialog.h ${SOURCES_DIR}/end_game_dialog.cpp
-    )
+    ${INCLUDES_DIR}/minefield.h ${SOURCES_DIR}/minefield.cpp)
 
 add_library(libMinesweeper ${SOURCE_FILES})
 target_include_directories(libMinesweeper PUBLIC ${INCLUDES_DIR})
