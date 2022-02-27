@@ -16,7 +16,7 @@ class GameWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit GameWindow(const GameParameters&& gameParameters, QWidget* parent = nullptr);
+    explicit GameWindow(GameEngine& gameEngine, QWidget* parent = nullptr);
     ~GameWindow() override;
 
 private:
@@ -26,7 +26,7 @@ private:
 
     Ui::GameWindow *ui_;
     QGridLayout mainGridLayout_;
-    std::unique_ptr<GameEngine> gameEngine_;
+    GameEngine& gameEngine_;
 
 private slots:
     void processFieldClicked(ClickType clickType, const Coordinates& coordinates);

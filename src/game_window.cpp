@@ -3,9 +3,10 @@
 #include "end_game_dialog.h"
 #include "common.h"
 
-GameWindow::GameWindow(const GameParameters&& gameParameters, QWidget* parent)
+GameWindow::GameWindow(GameEngine& gameEngine, QWidget* parent)
     : QMainWindow(parent),
-      ui_(new Ui::GameWindow)
+      ui_(new Ui::GameWindow),
+      gameEngine_(gameEngine)
 {
     ui_->setupUi(this);
 
@@ -16,11 +17,10 @@ GameWindow::GameWindow(const GameParameters&& gameParameters, QWidget* parent)
 
     Field::loadImages();
 
-    gameEngine_ = std::make_unique<GameEngine>(gameParameters);
+    connect(&gameEngine_, &GameEngine::gameEnd, this, &GameWindow::processGameEnd);
+    connect(&gameEngine_, &GameEngine::updateFrontend, this, &GameWindow::drawFields);
 
-    drawFields();
-
-    connect(gameEngine_.get(), &GameEngine::gameEnd, this, &GameWindow::processGameEnd);
+    gameEngine.restartGame();
 }
 
 GameWindow::~GameWindow()
@@ -35,7 +35,7 @@ void GameWindow::closeEvent(QCloseEvent*)
 
 void GameWindow::drawFields()
 {
-    for (const auto& field: gameEngine_->getCoordinatesToFieldsMapping())
+    for (const auto& field: gameEngine_.getCoordinatesToFieldsMapping())
     {
         const int x = field->getCoordinates().getRow();
         const int y = field->getCoordinates().getColumn();
@@ -47,15 +47,15 @@ void GameWindow::drawFields()
 
 void GameWindow::processFieldClicked(ClickType clickType, const Coordinates& coordinates)
 {
-    std::shared_ptr<Field> field = gameEngine_->getCoordinatesToFieldsMapping()[coordinates];
+    std::shared_ptr<Field> field = gameEngine_.getCoordinatesToFieldsMapping()[coordinates];
 
     if(clickType == ClickType::left)
     {
-        gameEngine_->processLeftClick(field);
+        gameEngine_.processLeftClick(field);
     }
     else if(clickType == ClickType::right)
     {
-        gameEngine_->processRightClick(field);
+        gameEngine_.processRightClick(field);
     }
 }
 
@@ -65,7 +65,7 @@ void GameWindow::processGameEnd(GameResult gameResult)
 
     if(endGameDialog.result() == QMessageBox::Reset)
     {
-        gameEngine_->restartGame();
+        gameEngine_.restartGame();
     }
     else
     {

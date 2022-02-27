@@ -1,8 +1,6 @@
 #include "coordinates.h"
 #include "common.h"
 
-#include <stdexcept>
-
 Coordinates::Coordinates(int row, int column)
 {
     if(validateCoordinates(row, column))

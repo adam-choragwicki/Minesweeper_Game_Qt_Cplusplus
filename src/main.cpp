@@ -10,9 +10,11 @@ int main(int argc, char *argv[])
     GameDimensionsDialogWindow gameDimensionsDialogWindow;
     gameDimensionsDialogWindow.exec();
 
-    GameWindow gameWindow(gameDimensionsDialogWindow.getGameParameters());
+    GameEngine gameEngine(gameDimensionsDialogWindow.getGameParameters());
 
+    GameWindow gameWindow(gameEngine);
     gameWindow.show();
+
     application.exec();
 
     return 0;

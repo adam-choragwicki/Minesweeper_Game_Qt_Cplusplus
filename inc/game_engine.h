@@ -4,6 +4,9 @@
 #include "field.h"
 #include "common.h"
 #include "minefield.h"
+#include "fields_manager.h"
+#include "mines_generator.h"
+#include "fields_uncoverer.h"
 
 #include <QVector>
 
@@ -13,28 +16,21 @@ class GameEngine : public QObject
 
 public:
     explicit GameEngine(const GameParameters& gameParameters);
-
-    [[maybe_unused]] void debugUncoverAllFields();
     void processLeftClick(std::shared_ptr<Field>& field);
     void processRightClick(std::shared_ptr<Field>& field);
     void restartGame();
-    CoordinatesToFieldsMapping& getCoordinatesToFieldsMapping() {return minefield_.getCoordinatesToFieldsMapping();}
+    [[nodiscard]] const CoordinatesToFieldsMapping& getCoordinatesToFieldsMapping() const {return minefield_.getCoordinatesToFieldsMapping();}
 
 signals:
     void gameEnd(GameResult gameResult);
+    void updateFrontend();
 
 private:
-    void assignAdjacentMinesCountToAllFields() const;
-    [[nodiscard]] int countCoveredFieldsWithoutMine() const;
-    [[nodiscard]] QVector<Coordinates> generateAdjacentFieldsCoordinates(const Coordinates& coordinates) const;
-    [[nodiscard]] QVector<std::shared_ptr<Field>> getAdjacentFields(const Coordinates& coordinates) const;
-    void createFields(int rowCount, int columnCount);
-    void generateMines() const;
     void processGameEnd(GameResult gameResult);
-    void resetFields();
-    void uncoverAdjacentEmptyFields(std::shared_ptr<Field>& field);
-    void uncoverRecursively(std::shared_ptr<Field>& field);
 
     const GameParameters gameParameters_;
     Minefield minefield_;
+    FieldManager fieldManager_;
+    MineGenerator mineGenerator_;
+    FieldUncoverer fieldUncoverer_;
 };
