@@ -23,9 +23,15 @@ enum class ClickType
 
 struct GameParameters
 {
-    int rowCount;
-    int columnCount;
-    int minePercentage;
+    GameParameters(int rowCount, int columnCount, int minePercentage) :
+    rowCount(rowCount), columnCount(columnCount), minePercentage(minePercentage)
+    {
+
+    }
+
+    const int rowCount;
+    const int columnCount;
+    const int minePercentage;
 };
 
 namespace gameParametersLimits

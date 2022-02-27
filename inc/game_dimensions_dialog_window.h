@@ -15,13 +15,13 @@ public:
     explicit GameDimensionsDialogWindow(QWidget* parent = nullptr);
     ~GameDimensionsDialogWindow() override;
 
-    [[nodiscard]] GameParameters getGameParameters() const {return gameParameters_;}
+    [[nodiscard]] GameParameters getGameParameters() const {return *gameParameters_;}
 
 private:
     void reject() override;
 
     Ui::GameDimensionsDialogWindow* ui_;
-    GameParameters gameParameters_;
+    std::unique_ptr<GameParameters> gameParameters_;
 
 private slots:
     void on_buttonBox_accepted();

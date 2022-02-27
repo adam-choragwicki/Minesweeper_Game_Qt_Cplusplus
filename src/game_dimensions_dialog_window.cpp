@@ -34,9 +34,9 @@ GameDimensionsDialogWindow::~GameDimensionsDialogWindow()
 
 void GameDimensionsDialogWindow::on_buttonBox_accepted()
 {
-    gameParameters_.rowCount = ui_->rowCount_ComboBox->currentText().toInt();
-    gameParameters_.columnCount = ui_->columnCount_ComboBox->currentText().toInt();
-    gameParameters_.minePercentage = ui_->minesPercentage_ComboBox->currentText().toInt();
+    gameParameters_ = std::make_unique<GameParameters>(ui_->rowCount_ComboBox->currentText().toInt(),
+                                                       ui_->columnCount_ComboBox->currentText().toInt(),
+                                                       ui_->minesPercentage_ComboBox->currentText().toInt());
 }
 
 void GameDimensionsDialogWindow::reject()
