@@ -2,20 +2,17 @@
 
 #include <QPushButton>
 #include <QApplication>
-#include <QDebug>
 
 EndGameDialog::EndGameDialog(QWidget* parent, GameResult gameResult) : QMessageBox(parent)
 {
     if(gameResult == GameResult::win)
     {
-        qDebug() << "GAME WIN";
         setIcon(QMessageBox::Icon::Information);
         setWindowTitle("Congratulations");
         setText("You win");
     }
     else if(gameResult == GameResult::lose)
     {
-        qDebug() << "GAME OVER";
         setIcon(QMessageBox::Icon::Warning);
         setWindowTitle("Game over");
         setText("Oops, do you want to play again?");
@@ -33,8 +30,6 @@ EndGameDialog::EndGameDialog(QWidget* parent, GameResult gameResult) : QMessageB
         restart = 0,
         close = 1
     };
-
-    qDebug() << "User input: " << userInput;
 
     if(userInput == restart)
     {

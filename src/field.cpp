@@ -2,7 +2,6 @@
 #include "end_game_dialog.h"
 
 #include <QMessageBox>
-#include <QDebug>
 #include <QApplication>
 
 std::unique_ptr<QPixmap> Field::flagPixmap;
