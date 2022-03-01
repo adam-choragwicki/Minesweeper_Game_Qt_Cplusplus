@@ -15,8 +15,6 @@ GameWindow::GameWindow(GameEngine& gameEngine, QWidget* parent)
     layout()->setSizeConstraint(QLayout::SetFixedSize);
     ui_->centralwidget->setLayout(&mainGridLayout_);
 
-    Field::loadImages();
-
     connect(&gameEngine_, &GameEngine::drawFieldsSignal, this, &GameWindow::drawFields);
     connect(&gameEngine_, &GameEngine::connectFieldsProcessing, this, &GameWindow::connectBackendAndFrontend);
     connect(&gameEngine_, &GameEngine::gameEndSignal, this, &GameWindow::processGameEnd);

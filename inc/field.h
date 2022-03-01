@@ -12,8 +12,6 @@ class Field : public QPushButton
 public:
     Field(int x, int y);
 
-    static void loadImages();
-
     [[nodiscard]] const Coordinates& getCoordinates() const {return coordinates_;}
     [[nodiscard]] bool isFlagged() const {return flagged_;}
     [[nodiscard]] bool isCovered() const {return covered_;}
@@ -37,8 +35,11 @@ signals:
 private:
     void mousePressEvent(QMouseEvent* event) override;
 
-    static std::unique_ptr<QPixmap> flagPixmap;
-    static std::unique_ptr<QPixmap> minePixmap;
+    static bool loadImages();
+
+    inline static std::unique_ptr<QPixmap> flagPixmap;
+    inline static std::unique_ptr<QPixmap> minePixmap;
+    inline static bool pixmapsLoaded = false;
 
     const Coordinates coordinates_;
 

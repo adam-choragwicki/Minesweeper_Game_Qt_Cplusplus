@@ -4,12 +4,14 @@
 #include <QMessageBox>
 #include <QApplication>
 
-std::unique_ptr<QPixmap> Field::flagPixmap;
-std::unique_ptr<QPixmap> Field::minePixmap;
-
 Field::Field(int x, int y) :
     coordinates_(x, y)
 {
+    if(!pixmapsLoaded)
+    {
+        pixmapsLoaded = loadImages();
+    }
+
     const int size_ = 30;
     const int fontSize_ = 20;
 
@@ -24,7 +26,7 @@ Field::Field(int x, int y) :
     reset();
 }
 
-void Field::loadImages()
+bool Field::loadImages()
 {
     flagPixmap = std::make_unique<QPixmap>();
     minePixmap = std::make_unique<QPixmap>();
@@ -38,6 +40,8 @@ void Field::loadImages()
     {
         throw std::runtime_error("Could not load :/images/images/mine.png");
     }
+
+    return true;
 }
 
 void Field::reset()
