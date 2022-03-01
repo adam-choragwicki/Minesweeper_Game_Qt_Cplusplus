@@ -10,17 +10,18 @@ void GameEngine::restartGame()
 {
     fieldManager_.destroyFields(minefield_);
     fieldManager_.createFields(gameParameters_, minefield_);
+    emit drawFieldsSignal();
 
     mineGenerator_.generateMines(gameParameters_, minefield_);
 
     fieldManager_.assignAdjacentMinesCountToAllFields(minefield_);
 
-    emit updateFrontend();
+    emit connectFieldsProcessing();
 }
 
 void GameEngine::processGameEnd(GameResult gameResult)
 {
-    emit gameEnd(gameResult);
+    emit gameEndSignal(gameResult);
 }
 
 void GameEngine::processLeftClick(std::shared_ptr<Field>& field)
@@ -29,7 +30,7 @@ void GameEngine::processLeftClick(std::shared_ptr<Field>& field)
     {
         if(!field->isFlagged())
         {
-            if(field->uncover() == -1)
+            if(field->uncover() == std::nullopt)
             {
                 processGameEnd(GameResult::lose);
             }
@@ -43,8 +44,6 @@ void GameEngine::processLeftClick(std::shared_ptr<Field>& field)
         }
 
         int fieldsWithoutMineLeft = fieldManager_.countCoveredFieldsWithoutMine(minefield_);
-
-        qDebug() << "Empty fields left: " << fieldsWithoutMineLeft;
 
         if(fieldsWithoutMineLeft == 0)
         {

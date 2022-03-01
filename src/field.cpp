@@ -10,6 +10,9 @@ std::unique_ptr<QPixmap> Field::minePixmap;
 Field::Field(int x, int y) :
     coordinates_(x, y)
 {
+    const int size_ = 30;
+    const int fontSize_ = 20;
+
     setCheckable(true);
     setFixedSize(size_, size_);
 
@@ -41,7 +44,10 @@ void Field::reset()
 {
     setChecked(false);
     setText("");
+
+    const QString textDefaultColor_ = "color: black";
     setStyleSheet(textDefaultColor_);
+
     setIcon(QIcon());
 
     mineIsPresent_ = false;
@@ -50,7 +56,7 @@ void Field::reset()
     adjacentMineCount_ = 0;
 }
 
-void Field::setMine()
+void Field::placeMine()
 {
     if(!mineIsPresent_)
     {
@@ -58,7 +64,7 @@ void Field::setMine()
     }
     else
     {
-        throw std::logic_error("Error, trying to put mine on a field already containing mine.");
+        throw std::logic_error("Cannot put mine on a field already containing mine.");
     }
 }
 
@@ -66,29 +72,33 @@ void Field::toggleFlag()
 {
     if(flagged_)
     {
-        setIcon(QIcon());
         flagged_ = false;
     }
     else
     {
-        showFlag();
         flagged_ = true;
     }
+
+    frontendToggleFlag();
 }
 
-int Field::uncover()
+std::optional<int> Field::uncover()
 {
+    std::optional<int> returnValue;
+
     if(mineIsPresent_)
     {
-        showMine();
-        return -1;
+        returnValue = std::nullopt;
     }
     else
     {
-        showAdjacentMineCount();
         covered_ = false;
-        return adjacentMineCount_;
+        returnValue = adjacentMineCount_.value();
     }
+
+    frontendUncover();
+
+    return returnValue;
 }
 
 void Field::mousePressEvent(QMouseEvent* event)
@@ -103,28 +113,48 @@ void Field::mousePressEvent(QMouseEvent* event)
     }
 }
 
-void Field::showAdjacentMineCount()
+void Field::frontendUncover()
 {
-    if(adjacentMineCount_ == 0)
+    if(mineIsPresent_)
     {
-        setChecked(true);
-        setStyleSheet("background:rgb(240, 240, 240);");
+        setIcon(*minePixmap);
+        setIconSize(QSize(this->width() - 2, this->height() - 2));
     }
     else
     {
-        setStyleSheet("color: black");
-        setText(QString::number(adjacentMineCount_));
+        if(adjacentMineCount_ == 0)
+        {
+            setChecked(true);
+            setStyleSheet("background:rgb(240, 240, 240);");
+        }
+        else
+        {
+            setStyleSheet("color: black");
+            setText(QString::number(adjacentMineCount_.value()));
+        }
     }
 }
 
-void Field::showFlag()
+void Field::frontendShowFlag()
 {
     setIcon(*flagPixmap);
     setIconSize(QSize(this->width() - 5, this->height() - 5));
 }
 
-void Field::showMine()
+void Field::frontendRemoveFlag()
 {
-    setIcon(*minePixmap);
-    setIconSize(QSize(this->width() - 2, this->height() - 2));
+    setIcon(QIcon());
+    setIconSize(QSize(this->width() - 5, this->height() - 5));
+}
+
+void Field::frontendToggleFlag()
+{
+    if(flagged_)
+    {
+        frontendShowFlag();
+    }
+    else
+    {
+        frontendRemoveFlag();
+    }
 }

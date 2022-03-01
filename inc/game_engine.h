@@ -22,8 +22,9 @@ public:
     [[nodiscard]] const CoordinatesToFieldsMapping& getCoordinatesToFieldsMapping() const {return minefield_.getCoordinatesToFieldsMapping();}
 
 signals:
-    void gameEnd(GameResult gameResult);
-    void updateFrontend();
+    void gameEndSignal(GameResult gameResult);
+    void drawFieldsSignal();
+    void connectFieldsProcessing();
 
 private:
     void processGameEnd(GameResult gameResult);

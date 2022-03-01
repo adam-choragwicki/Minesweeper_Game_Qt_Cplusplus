@@ -19,12 +19,17 @@ public:
     [[nodiscard]] bool isCovered() const {return covered_;}
     [[nodiscard]] bool isMine() const {return mineIsPresent_;}
 
-    void setAdjacentMineCount(int adjacentMineCount) {adjacentMineCount_ = adjacentMineCount;}
-    void setMine();
-
+    void setAdjacentMineCount(std::optional<int> adjacentMineCount) {adjacentMineCount_ = adjacentMineCount;}
+    void placeMine();
     void reset();
+
     void toggleFlag();
-    int uncover();
+    std::optional<int> uncover();
+
+    void frontendToggleFlag();
+    void frontendShowFlag();
+    void frontendRemoveFlag();
+    void frontendUncover();
 
 signals:
     void clickedSignal(ClickType clickType, const Coordinates& coordinates);
@@ -32,20 +37,13 @@ signals:
 private:
     void mousePressEvent(QMouseEvent* event) override;
 
-    void showAdjacentMineCount();
-    void showFlag();
-    void showMine();
-
     static std::unique_ptr<QPixmap> flagPixmap;
     static std::unique_ptr<QPixmap> minePixmap;
 
-    const int size_ = 30;
-    const int fontSize_ = 20;
     const Coordinates coordinates_;
-    const QString textDefaultColor_ = "color: black";
 
     bool mineIsPresent_{};
     bool covered_{};
     bool flagged_{};
-    int adjacentMineCount_{};
+    std::optional<int> adjacentMineCount_{};
 };

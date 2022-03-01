@@ -17,8 +17,9 @@ GameWindow::GameWindow(GameEngine& gameEngine, QWidget* parent)
 
     Field::loadImages();
 
-    connect(&gameEngine_, &GameEngine::gameEnd, this, &GameWindow::processGameEnd);
-    connect(&gameEngine_, &GameEngine::updateFrontend, this, &GameWindow::drawFields);
+    connect(&gameEngine_, &GameEngine::drawFieldsSignal, this, &GameWindow::drawFields);
+    connect(&gameEngine_, &GameEngine::connectFieldsProcessing, this, &GameWindow::connectBackendAndFrontend);
+    connect(&gameEngine_, &GameEngine::gameEndSignal, this, &GameWindow::processGameEnd);
 
     gameEngine.restartGame();
 }
@@ -41,6 +42,13 @@ void GameWindow::drawFields()
         const int y = field->getCoordinates().getColumn();
 
         mainGridLayout_.addWidget(field.get(), x, y);
+    }
+}
+
+void GameWindow::connectBackendAndFrontend()
+{
+    for (const auto& field: gameEngine_.getCoordinatesToFieldsMapping())
+    {
         connect(field.get(), &Field::clickedSignal, this, &GameWindow::processFieldClicked);
     }
 }

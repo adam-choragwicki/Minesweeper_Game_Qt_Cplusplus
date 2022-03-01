@@ -32,7 +32,7 @@ void FieldManager::assignAdjacentMinesCountToAllFields(const Minefield& minefiel
         if(field->isMine())
         {
             /*If a field is a mine itself an adjacent mine count is irrelevant*/
-            field->setAdjacentMineCount(-1);
+            field->setAdjacentMineCount(std::nullopt);
             continue;
         }
         else

@@ -1,9 +1,16 @@
 #include "minefield.h"
 #include "field.h"
 
-void Minefield::addField(const std::shared_ptr<Field> &field)
+void Minefield::addField(const std::shared_ptr<Field>& field)
 {
-    coordinatesToFieldsMapping_.insert(field->getCoordinates(), field);
+    if(coordinatesToFieldsMapping_.contains(field->getCoordinates()))
+    {
+        throw std::runtime_error("Field with given coordinates is already on the minefield. Duplicates are not allowed.");
+    }
+    else
+    {
+        coordinatesToFieldsMapping_.insert(field->getCoordinates(), field);
+    }
 }
 
 std::shared_ptr<Field> Minefield::operator[](Coordinates coordinates) const

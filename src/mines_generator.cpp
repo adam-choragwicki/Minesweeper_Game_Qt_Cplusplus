@@ -4,14 +4,12 @@
 
 #include <QRandomGenerator>
 #include <QSet>
-#include <QDebug>
 
 // TODO test how many mines were generated
 void MineGenerator::generateMines(const GameParameters& gameParameters, const Minefield& minefield) const
 {
-    const int targetMineCount = static_cast<int>(gameParameters.rowCount * gameParameters.columnCount * (double(gameParameters.minePercentage) / 100));
-
-    qDebug() << "Target mine count: " << targetMineCount;
+    const int targetMineCount = static_cast<int>(gameParameters.rowCount * gameParameters.columnCount *
+                                                 (double(gameParameters.minePercentage) / 100));
 
     QRandomGenerator* randomGenerator = QRandomGenerator::global();
 
@@ -19,13 +17,21 @@ void MineGenerator::generateMines(const GameParameters& gameParameters, const Mi
 
     while(mineCoordinatesSet.size() != targetMineCount)
     {
-        mineCoordinatesSet.insert(QPair<int, int>(randomGenerator->bounded(1, gameParameters.rowCount), randomGenerator->bounded(1, gameParameters.columnCount)));
+        mineCoordinatesSet.insert(QPair<int, int>(randomGenerator->bounded(1, gameParameters.rowCount),
+                                                  randomGenerator->bounded(1, gameParameters.columnCount)));
     }
 
-    qDebug() << "Generated " << mineCoordinatesSet.size() << " mines";
-
-    for(auto& mineCoordinates : mineCoordinatesSet)
+    for(auto& mineCoordinates: mineCoordinatesSet)
     {
-        minefield[Coordinates(mineCoordinates.first, mineCoordinates.second)]->setMine();
+        auto field = minefield[Coordinates(mineCoordinates.first, mineCoordinates.second)];
+
+        if(field)
+        {
+            field->placeMine();
+        }
+        else
+        {
+            throw std::runtime_error("Cannot place mine on non-existing field.");
+        }
     }
 }

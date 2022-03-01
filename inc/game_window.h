@@ -8,12 +8,15 @@
 #include "QGridLayout"
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class GameWindow; }
+namespace Ui
+{
+    class GameWindow;
+}
 QT_END_NAMESPACE
 
 class GameWindow : public QMainWindow
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     explicit GameWindow(GameEngine& gameEngine, QWidget* parent = nullptr);
@@ -24,11 +27,12 @@ private:
 
     void drawFields();
 
-    Ui::GameWindow *ui_;
+    Ui::GameWindow* ui_;
     QGridLayout mainGridLayout_;
     GameEngine& gameEngine_;
 
 private slots:
     void processFieldClicked(ClickType clickType, const Coordinates& coordinates);
     void processGameEnd(GameResult gameResult);
+    void connectBackendAndFrontend();
 };
