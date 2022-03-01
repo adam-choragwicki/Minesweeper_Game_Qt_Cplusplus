@@ -82,9 +82,14 @@ void Field::toggleFlag()
     frontendToggleFlag();
 }
 
-std::optional<int> Field::uncover()
+std::optional<int> Field::uncover(bool removeFlag)
 {
     std::optional<int> returnValue;
+
+    if(removeFlag && flagged_)
+    {
+        toggleFlag();
+    }
 
     if(mineIsPresent_)
     {

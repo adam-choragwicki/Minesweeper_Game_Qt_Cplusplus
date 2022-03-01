@@ -24,7 +24,7 @@ public:
     void reset();
 
     void toggleFlag();
-    std::optional<int> uncover();
+    std::optional<int> uncover(bool removeFlag=false);
 
     void frontendToggleFlag();
     void frontendShowFlag();

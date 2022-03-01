@@ -11,7 +11,7 @@ void FieldUncoverer::uncoverAdjacentEmptyFields(std::shared_ptr<Field>& field, c
 // TODO test some kind of scenario of uncovering recursively
 void FieldUncoverer::uncoverFieldsRecursively(std::shared_ptr<Field>& field, const Minefield& minefield)
 {
-    if(field->uncover() == 0)
+    if(field->uncover(true) == 0)
     {
         FieldManager fieldManager;
 
