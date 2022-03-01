@@ -5,7 +5,6 @@
 #include <QRandomGenerator>
 #include <QSet>
 
-// TODO test how many mines were generated
 void MineGenerator::generateMines(const GameParameters& gameParameters, const Minefield& minefield) const
 {
     const int targetMineCount = static_cast<int>(gameParameters.rowCount * gameParameters.columnCount *

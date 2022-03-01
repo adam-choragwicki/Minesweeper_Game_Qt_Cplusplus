@@ -3,7 +3,6 @@
 
 #include <memory>
 
-// TODO test if given number of fields are created and non-empty
 void FieldManager::createFields(const GameParameters& gameParameters, Minefield& minefield)
 {
     for(int x = 1; x <= gameParameters.rowCount; x++)
@@ -16,13 +15,11 @@ void FieldManager::createFields(const GameParameters& gameParameters, Minefield&
     }
 }
 
-// TODO test if all fields are empty
 void FieldManager::destroyFields(Minefield& minefield)
 {
     minefield.clear();
 }
 
-// TODO test if mine counts assigned to each field are correct
 void FieldManager::assignAdjacentMinesCountToAllFields(const Minefield& minefield) const
 {
     for(auto& field : minefield)
@@ -56,7 +53,6 @@ void FieldManager::assignAdjacentMinesCountToAllFields(const Minefield& minefiel
     }
 }
 
-// TODO test if returned vector consists of adjacent fields
 QVector<std::shared_ptr<Field>> FieldManager::getAdjacentFields(const Coordinates& coordinates, const Minefield& minefield) const
 {
     QVector<Coordinates> adjacentFieldsCoordinates = generateAdjacentFieldsCoordinates(coordinates);
@@ -75,7 +71,6 @@ QVector<std::shared_ptr<Field>> FieldManager::getAdjacentFields(const Coordinate
     return adjacentFields;
 }
 
-// TODO test if returned integer is correct
 int FieldManager::countCoveredFieldsWithoutMine(const Minefield& minefield) const
 {
     int counter = 0;
@@ -91,7 +86,6 @@ int FieldManager::countCoveredFieldsWithoutMine(const Minefield& minefield) cons
     return counter;
 }
 
-// TODO test if returned vector consists of correct adjacent fields coordinates
 QVector<Coordinates> FieldManager::generateAdjacentFieldsCoordinates(const Coordinates& coordinates) const
 {
     static const QVector<QPair<int, int>> adjacentFieldsOffsets = {{0, -1},

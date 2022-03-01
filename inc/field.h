@@ -13,6 +13,7 @@ public:
     Field(int x, int y);
 
     [[nodiscard]] const Coordinates& getCoordinates() const {return coordinates_;}
+    [[nodiscard]] std::optional<int> getAdjacentMineCount() const {return adjacentMineCount_;}
     [[nodiscard]] bool isFlagged() const {return flagged_;}
     [[nodiscard]] bool isCovered() const {return covered_;}
     [[nodiscard]] bool isMine() const {return mineIsPresent_;}

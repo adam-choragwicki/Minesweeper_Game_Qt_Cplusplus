@@ -16,7 +16,7 @@ GameWindow::GameWindow(GameEngine& gameEngine, QWidget* parent)
     ui_->centralwidget->setLayout(&mainGridLayout_);
 
     connect(&gameEngine_, &GameEngine::drawFieldsSignal, this, &GameWindow::drawFields);
-    connect(&gameEngine_, &GameEngine::connectFieldsProcessing, this, &GameWindow::connectBackendAndFrontend);
+    connect(&gameEngine_, &GameEngine::connectFieldsProcessingSignal, this, &GameWindow::connectBackendAndFrontend);
     connect(&gameEngine_, &GameEngine::gameEndSignal, this, &GameWindow::processGameEnd);
 
     gameEngine.restartGame();

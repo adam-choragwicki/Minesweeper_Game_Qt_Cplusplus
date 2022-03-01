@@ -24,7 +24,7 @@ public:
 signals:
     void gameEndSignal(GameResult gameResult);
     void drawFieldsSignal();
-    void connectFieldsProcessing();
+    void connectFieldsProcessingSignal();
 
 private:
     void processGameEnd(GameResult gameResult);

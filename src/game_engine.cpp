@@ -16,7 +16,7 @@ void GameEngine::restartGame()
 
     fieldManager_.assignAdjacentMinesCountToAllFields(minefield_);
 
-    emit connectFieldsProcessing();
+    emit connectFieldsProcessingSignal();
 }
 
 void GameEngine::processGameEnd(GameResult gameResult)

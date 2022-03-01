@@ -57,7 +57,7 @@ void Field::reset()
     mineIsPresent_ = false;
     covered_ = true;
     flagged_ = false;
-    adjacentMineCount_ = 0;
+    adjacentMineCount_ = std::nullopt;
 }
 
 void Field::placeMine()
@@ -68,7 +68,7 @@ void Field::placeMine()
     }
     else
     {
-        throw std::logic_error("Cannot put mine on a field already containing mine.");
+        throw std::runtime_error("Cannot put mine on a field already containing mine.");
     }
 }
 
@@ -102,7 +102,7 @@ std::optional<int> Field::uncover(bool removeFlag)
     else
     {
         covered_ = false;
-        returnValue = adjacentMineCount_.value();
+        returnValue = adjacentMineCount_.value_or(-1);
     }
 
     frontendUncover();
@@ -139,7 +139,7 @@ void Field::frontendUncover()
         else
         {
             setStyleSheet("color: black");
-            setText(QString::number(adjacentMineCount_.value()));
+            setText(QString::number(adjacentMineCount_.value_or(-1)));
         }
     }
 }
