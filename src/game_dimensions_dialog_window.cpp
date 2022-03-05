@@ -8,21 +8,21 @@ GameDimensionsDialogWindow::GameDimensionsDialogWindow(QWidget *parent) :
 {
     ui_->setupUi(this);
 
-    for(int i = 0, rowCountOption = gameParametersLimits::minRowCount; rowCountOption <= gameParametersLimits::maxRowCount; ++rowCountOption, ++i)
+    for(int i = 0, rowCountOption = GameParametersLimits::minRowCount; rowCountOption <= GameParametersLimits::maxRowCount; ++rowCountOption, ++i)
     {
         ui_->rowCount_ComboBox->addItem(QString::number(rowCountOption));
         ui_->rowCount_ComboBox->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
     }
 
-    for(int i = 0, columnCountOption = gameParametersLimits::minColumnCount; columnCountOption <= gameParametersLimits::maxColumnCount; ++columnCountOption, ++i)
+    for(int i = 0, columnCountOption = GameParametersLimits::minColumnCount; columnCountOption <= GameParametersLimits::maxColumnCount; ++columnCountOption, ++i)
     {
         ui_->columnCount_ComboBox->addItem(QString::number(columnCountOption));
         ui_->columnCount_ComboBox->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
     }
 
-    for (int i = 0 ; i < gameParametersLimits::minePercentageOptions.size() ; ++i)
+    for (int i = 0 ; i < GameParametersLimits::minePercentageOptions.size() ; ++i)
     {
-        ui_->minesPercentage_ComboBox->addItem(QString::number(gameParametersLimits::minePercentageOptions.at(i)));
+        ui_->minesPercentage_ComboBox->addItem(QString::number(GameParametersLimits::minePercentageOptions.at(i)));
         ui_->minesPercentage_ComboBox->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
     }
 }

@@ -14,17 +14,17 @@ class GameEngine : public QObject
 {
     Q_OBJECT
 
+signals:
+    void gameEndSignal(GameResult gameResult);
+    void drawFieldsSignal();
+    void connectFieldsProcessingSignal();
+
 public:
     explicit GameEngine(const GameParameters& gameParameters);
     void processLeftClick(std::shared_ptr<Field>& field);
     void processRightClick(std::shared_ptr<Field>& field);
     void restartGame();
     [[nodiscard]] const CoordinatesToFieldsMapping& getCoordinatesToFieldsMapping() const {return minefield_.getCoordinatesToFieldsMapping();}
-
-signals:
-    void gameEndSignal(GameResult gameResult);
-    void drawFieldsSignal();
-    void connectFieldsProcessingSignal();
 
 private:
     void processGameEnd(GameResult gameResult);

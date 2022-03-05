@@ -25,14 +25,13 @@ public:
 private:
     void closeEvent(QCloseEvent*) override;
 
-    void drawFields();
-
     Ui::GameWindow* ui_;
     QGridLayout mainGridLayout_;
     GameEngine& gameEngine_;
 
 private slots:
-    void processFieldClicked(ClickType clickType, const Coordinates& coordinates);
-    void processGameEnd(GameResult gameResult);
-    void connectBackendAndFrontend();
+    void drawFieldsSlot();
+    void processFieldClickedSlot(ClickType clickType, const Coordinates& coordinates);
+    void processGameEndSlot(GameResult gameResult);
+    void connectFieldsProcessingSlot();
 };

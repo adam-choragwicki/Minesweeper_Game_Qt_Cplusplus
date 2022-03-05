@@ -34,7 +34,7 @@ struct GameParameters
     const int minePercentage;
 };
 
-namespace gameParametersLimits
+namespace GameParametersLimits
 {
     const int minRowCount = 10;
     const int maxRowCount = 30;

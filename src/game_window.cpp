@@ -15,9 +15,9 @@ GameWindow::GameWindow(GameEngine& gameEngine, QWidget* parent)
     layout()->setSizeConstraint(QLayout::SetFixedSize);
     ui_->centralwidget->setLayout(&mainGridLayout_);
 
-    connect(&gameEngine_, &GameEngine::drawFieldsSignal, this, &GameWindow::drawFields);
-    connect(&gameEngine_, &GameEngine::connectFieldsProcessingSignal, this, &GameWindow::connectBackendAndFrontend);
-    connect(&gameEngine_, &GameEngine::gameEndSignal, this, &GameWindow::processGameEnd);
+    connect(&gameEngine_, &GameEngine::drawFieldsSignal, this, &GameWindow::drawFieldsSlot);
+    connect(&gameEngine_, &GameEngine::connectFieldsProcessingSignal, this, &GameWindow::connectFieldsProcessingSlot);
+    connect(&gameEngine_, &GameEngine::gameEndSignal, this, &GameWindow::processGameEndSlot);
 
     gameEngine.restartGame();
 }
@@ -32,7 +32,7 @@ void GameWindow::closeEvent(QCloseEvent*)
     exit(0);
 }
 
-void GameWindow::drawFields()
+void GameWindow::drawFieldsSlot()
 {
     for (const auto& field: gameEngine_.getCoordinatesToFieldsMapping())
     {
@@ -43,15 +43,15 @@ void GameWindow::drawFields()
     }
 }
 
-void GameWindow::connectBackendAndFrontend()
+void GameWindow::connectFieldsProcessingSlot()
 {
     for (const auto& field: gameEngine_.getCoordinatesToFieldsMapping())
     {
-        connect(field.get(), &Field::clickedSignal, this, &GameWindow::processFieldClicked);
+        connect(field.get(), &Field::clickedSignal, this, &GameWindow::processFieldClickedSlot);
     }
 }
 
-void GameWindow::processFieldClicked(ClickType clickType, const Coordinates& coordinates)
+void GameWindow::processFieldClickedSlot(ClickType clickType, const Coordinates& coordinates)
 {
     std::shared_ptr<Field> field = gameEngine_.getCoordinatesToFieldsMapping()[coordinates];
 
@@ -65,7 +65,7 @@ void GameWindow::processFieldClicked(ClickType clickType, const Coordinates& coo
     }
 }
 
-void GameWindow::processGameEnd(GameResult gameResult)
+void GameWindow::processGameEndSlot(GameResult gameResult)
 {
     EndGameDialog endGameDialog(this, gameResult);
 
