@@ -1,37 +1,36 @@
 #pragma once
 
-#include <array>
+#include <map>
 #include <memory>
-#include <QMap>
 
 class Coordinates;
+
 class Field;
 
-using CoordinatesToFieldsMapping = QMap<Coordinates, std::shared_ptr<Field>>;
+using CoordinatesToFieldsMapping = std::map<Coordinates, std::unique_ptr<Field>>;
 
 enum class GameResult
 {
-    win,
-    lose
+    win, lose
 };
 
 enum class ClickType
 {
-    left,
-    right
+    left, right
 };
 
-struct GameParameters
+struct MinefieldParameters
 {
-    GameParameters(int rowCount, int columnCount, int minePercentage) :
-    rowCount(rowCount), columnCount(columnCount), minePercentage(minePercentage)
+    MinefieldParameters() = default;
+
+    MinefieldParameters(int rowCount, int columnCount, int minePercentage) : rowCount(rowCount), columnCount(columnCount), minePercentage(minePercentage)
     {
 
     }
 
-    const int rowCount;
-    const int columnCount;
-    const int minePercentage;
+    int rowCount {};
+    int columnCount {};
+    int minePercentage {};
 };
 
 namespace GameParametersLimits

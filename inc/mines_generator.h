@@ -6,5 +6,7 @@
 class MineGenerator
 {
 public:
-    void generateMines(const GameParameters& gameParameters, const Minefield& minefield) const;
+    MineGenerator() = delete;
+
+    static void generateMines(const MinefieldParameters& gameParameters, const Minefield& minefield);
 };

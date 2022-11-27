@@ -49,7 +49,16 @@ bool operator==(const Coordinates& coordinates1, const Coordinates& coordinates2
 
 std::ostream& operator<<(std::ostream& os, const Coordinates& coordinates)
 {
-    os << "(" << coordinates.getRow() << "," << coordinates.getColumn() << ")";
+    os << "[" << coordinates.getRow() << "," << coordinates.getColumn() << "]";
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const std::vector<Coordinates>& coordinatesVector)
+{
+    for(const Coordinates& coordinates : coordinatesVector)
+    {
+        os << coordinates;
+    }
 
     return os;
 }

@@ -2,12 +2,11 @@
 
 #include "minefield.h"
 
-class FieldUncoverer
+class FieldsUncoverer
 {
 public:
-    void uncoverAdjacentEmptyFields(std::shared_ptr<Field>& field, const Minefield& minefield);
-    [[maybe_unused]] void debug_UncoverAllFields(const Minefield& minefield);
+    FieldsUncoverer() = delete;
 
-private:
-    void uncoverFieldsRecursively(std::shared_ptr<Field>& field, const Minefield& minefield);
+    static void uncoverAdjacentEmptyFields(Field* field, Minefield* minefield);
+    [[maybe_unused]] static void debug_UncoverAllFields(const Minefield& minefield);
 };

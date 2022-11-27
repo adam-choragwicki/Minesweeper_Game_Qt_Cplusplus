@@ -6,14 +6,17 @@
 class Minefield
 {
 public:
+    explicit Minefield(MinefieldParameters minefieldParameters);
+
     [[nodiscard]] const CoordinatesToFieldsMapping& getCoordinatesToFieldsMapping() const { return coordinatesToFieldsMapping_; }
-    void addField(const std::shared_ptr<Field>& field);
-    std::shared_ptr<Field> operator[](Coordinates coordinates) const;
-    void clear();
+
+    void setMine(const Coordinates& coordinates);
 
     [[nodiscard]] CoordinatesToFieldsMapping::const_iterator begin() const { return coordinatesToFieldsMapping_.begin(); }
     [[nodiscard]] CoordinatesToFieldsMapping::const_iterator end() const { return coordinatesToFieldsMapping_.end(); }
 
 private:
+    void addField(const Coordinates& coordinates);
+
     CoordinatesToFieldsMapping coordinatesToFieldsMapping_;
 };

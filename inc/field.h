@@ -3,49 +3,47 @@
 #include "coordinates.h"
 #include "common.h"
 
-#include <QPushButton>
-#include <QMouseEvent>
+#include <QObject>
 
-class Field : public QPushButton
+enum class FieldState
 {
-    Q_OBJECT
-public:
-    Field(int x, int y);
+    COVERED, UNCOVERED, FLAGGED, MINE_EXPLODED
+};
 
-    [[nodiscard]] const Coordinates& getCoordinates() const {return coordinates_;}
-    [[nodiscard]] std::optional<int> getAdjacentMineCount() const {return adjacentMineCount_;}
-    [[nodiscard]] bool isFlagged() const {return flagged_;}
-    [[nodiscard]] bool isCovered() const {return covered_;}
-    [[nodiscard]] bool isMine() const {return mineIsPresent_;}
-
-    void setAdjacentMineCount(std::optional<int> adjacentMineCount) {adjacentMineCount_ = adjacentMineCount;}
-    void placeMine();
-    void reset();
-
-    void toggleFlag();
-    std::optional<int> uncover(bool removeFlag=false);
-
-    void frontendToggleFlag();
-    void frontendShowFlag();
-    void frontendRemoveFlag();
-    void frontendUncover();
+class Field : public QObject
+{
+Q_OBJECT
 
 signals:
-    void clickedSignal(ClickType clickType, const Coordinates& coordinates);
+    void fieldStateUpdatedEvent(Field* field);
+
+public:
+    explicit Field(const Coordinates& coordinates);
+
+    [[nodiscard]] const Coordinates& getCoordinates() const
+    { return coordinates_; }
+
+    [[nodiscard]] std::optional<int> getAdjacentMineCount() const
+    { return adjacentMineCount_; }
+
+    void setAdjacentMineCount(std::optional<int> adjacentMineCount)
+    { adjacentMineCount_ = adjacentMineCount; }
+
+    [[nodiscard]] bool isMinePresent() const
+    { return mineIsPresent_; }
+
+    [[nodiscard]] const FieldState& getState() const
+    { return fieldState_; };
+
+    void setState(FieldState newFieldState);
+    void setMine();
+    void placeMine();
+    void reset();
+    void uncover(bool safe = false);
 
 private:
-    void mousePressEvent(QMouseEvent* event) override;
-
-    static bool loadImages();
-
-    inline static std::unique_ptr<QPixmap> flagPixmap;
-    inline static std::unique_ptr<QPixmap> minePixmap;
-    inline static bool pixmapsLoaded = false;
-
     const Coordinates coordinates_;
-
-    bool mineIsPresent_{};
-    bool covered_{};
-    bool flagged_{};
+    FieldState fieldState_;
     std::optional<int> adjacentMineCount_{};
+    bool mineIsPresent_;
 };

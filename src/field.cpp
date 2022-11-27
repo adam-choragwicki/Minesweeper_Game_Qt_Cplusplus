@@ -1,62 +1,17 @@
 #include "field.h"
-#include "end_game_dialog.h"
+#include "view/end_game_dialog.h"
+#include "log_manager.h"
 
-#include <QMessageBox>
-#include <QApplication>
-
-Field::Field(int x, int y) :
-    coordinates_(x, y)
+Field::Field(const Coordinates& coordinates) : coordinates_(coordinates)
 {
-    if(!pixmapsLoaded)
-    {
-        pixmapsLoaded = loadImages();
-    }
-
-    const int size_ = 30;
-    const int fontSize_ = 20;
-
-    setCheckable(true);
-    setFixedSize(size_, size_);
-
-    QFont currentFont = font();
-    currentFont.setPointSize(fontSize_);
-    currentFont.setBold(true);
-    setFont(currentFont);
-
-    reset();
-}
-
-bool Field::loadImages()
-{
-    flagPixmap = std::make_unique<QPixmap>();
-    minePixmap = std::make_unique<QPixmap>();
-
-    if(!flagPixmap->load(":/images/images/flag.png"))
-    {
-        throw std::runtime_error("Could not load :/images/images/flag.png");
-    }
-
-    if(!minePixmap->load(":/images/images/mine.png"))
-    {
-        throw std::runtime_error("Could not load :/images/images/mine.png");
-    }
-
-    return true;
+    fieldState_ = FieldState::COVERED;
+    mineIsPresent_ = false;
 }
 
 void Field::reset()
 {
-    setChecked(false);
-    setText("");
-
-    const QString textDefaultColor_ = "color: black";
-    setStyleSheet(textDefaultColor_);
-
-    setIcon(QIcon());
-
+    fieldState_ = FieldState::COVERED;
     mineIsPresent_ = false;
-    covered_ = true;
-    flagged_ = false;
     adjacentMineCount_ = std::nullopt;
 }
 
@@ -72,98 +27,115 @@ void Field::placeMine()
     }
 }
 
-void Field::toggleFlag()
-{
-    if(flagged_)
-    {
-        flagged_ = false;
-    }
-    else
-    {
-        flagged_ = true;
-    }
-
-    frontendToggleFlag();
-}
-
-std::optional<int> Field::uncover(bool removeFlag)
-{
-    std::optional<int> returnValue;
-
-    if(removeFlag && flagged_)
-    {
-        toggleFlag();
-    }
-
-    if(mineIsPresent_)
-    {
-        returnValue = std::nullopt;
-    }
-    else
-    {
-        covered_ = false;
-        returnValue = adjacentMineCount_.value_or(-1);
-    }
-
-    frontendUncover();
-
-    return returnValue;
-}
-
-void Field::mousePressEvent(QMouseEvent* event)
-{
-    if(event->button() == Qt::MouseButton::LeftButton)
-    {
-        emit clickedSignal(ClickType::left, coordinates_);
-    }
-    else if(event->button() == Qt::MouseButton::RightButton)
-    {
-        emit clickedSignal(ClickType::right, coordinates_);
-    }
-}
-
-void Field::frontendUncover()
+void Field::uncover(bool safe)
 {
     if(mineIsPresent_)
     {
-        setIcon(*minePixmap);
-        setIconSize(QSize(this->width() - 2, this->height() - 2));
+        setState(FieldState::MINE_EXPLODED);
     }
     else
     {
-        if(adjacentMineCount_ == 0)
-        {
-            setChecked(true);
-            setStyleSheet("background:rgb(240, 240, 240);");
-        }
-        else
-        {
-            setStyleSheet("color: black");
-            setText(QString::number(adjacentMineCount_.value_or(-1)));
-        }
+        setState(FieldState::UNCOVERED);
     }
+
+    emit fieldStateUpdatedEvent(this);
 }
 
-void Field::frontendShowFlag()
+void Field::setMine()
 {
-    setIcon(*flagPixmap);
-    setIconSize(QSize(this->width() - 5, this->height() - 5));
-}
-
-void Field::frontendRemoveFlag()
-{
-    setIcon(QIcon());
-    setIconSize(QSize(this->width() - 5, this->height() - 5));
-}
-
-void Field::frontendToggleFlag()
-{
-    if(flagged_)
+    if(mineIsPresent_)
     {
-        frontendShowFlag();
+        throw std::runtime_error("Cannot place mine on field already containing mine");
     }
     else
     {
-        frontendRemoveFlag();
+        mineIsPresent_ = true;
     }
+}
+
+void Field::setState(FieldState newFieldState)
+{
+    if(fieldState_ == FieldState::COVERED)
+    {
+        if(newFieldState == FieldState::COVERED)
+        {
+            throw std::runtime_error("Unsupported state transition");
+        }
+        else if(newFieldState == FieldState::UNCOVERED)
+        {
+            fieldState_ = newFieldState;
+        }
+        else if(newFieldState == FieldState::FLAGGED)
+        {
+            fieldState_ = newFieldState;
+        }
+        else if(newFieldState == FieldState::MINE_EXPLODED)
+        {
+            fieldState_ = newFieldState;
+        }
+    }
+    else if(fieldState_ == FieldState::UNCOVERED)
+    {
+        if(newFieldState == FieldState::COVERED)
+        {
+            throw std::runtime_error("Unsupported state transition");
+        }
+        else if(newFieldState == FieldState::UNCOVERED)
+        {
+            throw std::runtime_error("Unsupported state transition");
+        }
+        else if(newFieldState == FieldState::FLAGGED)
+        {
+            throw std::runtime_error("Unsupported state transition");
+        }
+        else if(newFieldState == FieldState::MINE_EXPLODED)
+        {
+            throw std::runtime_error("Unsupported state transition");
+        }
+    }
+    else if(fieldState_ == FieldState::FLAGGED)
+    {
+        if(newFieldState == FieldState::COVERED)
+        {
+            fieldState_ = newFieldState;
+        }
+        else if(newFieldState == FieldState::UNCOVERED)
+        {
+            /*Permitted only during uncovering adjacent empty fields*/
+            fieldState_ = newFieldState;
+        }
+        else if(newFieldState == FieldState::FLAGGED)
+        {
+            throw std::runtime_error("Unsupported state transition");
+        }
+        else if(newFieldState == FieldState::MINE_EXPLODED)
+        {
+            throw std::runtime_error("Unsupported state transition");
+        }
+    }
+    else if(fieldState_ == FieldState::MINE_EXPLODED)
+    {
+        if(newFieldState == FieldState::COVERED)
+        {
+            throw std::runtime_error("Unsupported state transition");
+        }
+        else if(newFieldState == FieldState::UNCOVERED)
+        {
+            throw std::runtime_error("Unsupported state transition");
+        }
+        else if(newFieldState == FieldState::FLAGGED)
+        {
+            throw std::runtime_error("Unsupported state transition");
+        }
+        else if(newFieldState == FieldState::MINE_EXPLODED)
+        {
+            throw std::runtime_error("Unsupported state transition");
+        }
+    }
+    else
+    {
+        throw std::runtime_error("Unsupported field state");
+    }
+
+    emit fieldStateUpdatedEvent(this);
 }

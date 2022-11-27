@@ -1,6 +1,5 @@
-#include "game_dimensions_dialog_window.h"
+#include "view/game_dimensions_dialog_window.h"
 #include "ui_game_dimensions_dialog_window.h"
-#include "common.h"
 
 GameDimensionsDialogWindow::GameDimensionsDialogWindow(QWidget *parent) :
     QDialog(parent),
@@ -34,9 +33,9 @@ GameDimensionsDialogWindow::~GameDimensionsDialogWindow()
 
 void GameDimensionsDialogWindow::on_buttonBox_accepted()
 {
-    gameParameters_ = std::make_unique<GameParameters>(ui_->rowCount_ComboBox->currentText().toInt(),
-                                                       ui_->columnCount_ComboBox->currentText().toInt(),
-                                                       ui_->minesPercentage_ComboBox->currentText().toInt());
+    gameParameters_ = std::make_unique<MinefieldParameters>(ui_->rowCount_ComboBox->currentText().toInt(),
+                                                            ui_->columnCount_ComboBox->currentText().toInt(),
+                                                            ui_->minesPercentage_ComboBox->currentText().toInt());
 }
 
 void GameDimensionsDialogWindow::reject()

@@ -1,10 +1,12 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 
 class Coordinates
 {
     friend std::ostream& operator<<(std::ostream& os, const Coordinates& coordinates);
+    friend std::ostream& operator<<(std::ostream& os, const std::vector<Coordinates>& coordinatesVector);
 
 public:
     Coordinates(int row, int column);

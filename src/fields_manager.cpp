@@ -1,69 +1,50 @@
 #include "fields_manager.h"
 #include "field.h"
 
-#include <memory>
-
-void FieldManager::createFields(const GameParameters& gameParameters, Minefield& minefield)
+void FieldsManager::assignAdjacentMinesCountToAllFields(const Minefield& minefield)
 {
-    for(int x = 1; x <= gameParameters.rowCount; x++)
+    for(auto& [coordinates, field] : minefield.getCoordinatesToFieldsMapping())
     {
-        for(int y = 1; y <= gameParameters.columnCount; y++)
-        {
-            std::shared_ptr<Field> field = std::make_shared<Field>(x, y);
-            minefield.addField(field);
-        }
-    }
-}
-
-void FieldManager::destroyFields(Minefield& minefield)
-{
-    minefield.clear();
-}
-
-void FieldManager::assignAdjacentMinesCountToAllFields(const Minefield& minefield) const
-{
-    for(auto& field : minefield)
-    {
-        int adjacentMineCount = 0;
-
-        if(field->isMine())
+        if(field->isMinePresent())
         {
             /*If a field is a mine itself an adjacent mine count is irrelevant*/
             field->setAdjacentMineCount(std::nullopt);
-            continue;
         }
         else
         {
-            Coordinates currentFieldCoordinates = field->getCoordinates();
+            const Coordinates& currentFieldCoordinates = field->getCoordinates();
+            std::vector<Coordinates> allAdjacentFieldsCoordinates = generateAdjacentFieldsCoordinates(currentFieldCoordinates);
 
-            QVector<Coordinates> allAdjacentFieldsCoordinates = generateAdjacentFieldsCoordinates(currentFieldCoordinates);
+            int adjacentMineCount = 0;
 
-            for(auto& adjacentFieldCoordinates : allAdjacentFieldsCoordinates)
+            for(const auto& adjacentFieldCoordinates : allAdjacentFieldsCoordinates)
             {
-                std::shared_ptr<Field> otherField = minefield[adjacentFieldCoordinates];
-
-                if(otherField && otherField->isMine())
+                if(minefield.getCoordinatesToFieldsMapping().contains(adjacentFieldCoordinates))
                 {
-                    ++adjacentMineCount;
+                    Field* otherField = minefield.getCoordinatesToFieldsMapping().at(adjacentFieldCoordinates).get();
+
+                    if(otherField->isMinePresent())
+                    {
+                        ++adjacentMineCount;
+                    }
                 }
             }
-        }
 
-        field->setAdjacentMineCount(adjacentMineCount);
+            field->setAdjacentMineCount(adjacentMineCount);
+        }
     }
 }
 
-QVector<std::shared_ptr<Field>> FieldManager::getAdjacentFields(const Coordinates& coordinates, const Minefield& minefield) const
+std::vector<Field*> FieldsManager::getAdjacentFields(const Coordinates& coordinates, Minefield* minefield)
 {
-    QVector<Coordinates> adjacentFieldsCoordinates = generateAdjacentFieldsCoordinates(coordinates);
-    QVector<std::shared_ptr<Field>> adjacentFields;
+    std::vector<Coordinates> adjacentFieldsCoordinates = generateAdjacentFieldsCoordinates(coordinates);
+    std::vector<Field*> adjacentFields;
 
     for(auto& adjacentFieldCoordinates : adjacentFieldsCoordinates)
     {
-        std::shared_ptr<Field> field = minefield[adjacentFieldCoordinates];
-
-        if(field)
+        if(minefield->getCoordinatesToFieldsMapping().contains(adjacentFieldCoordinates))
         {
+            Field* field = minefield->getCoordinatesToFieldsMapping().at(adjacentFieldCoordinates).get();
             adjacentFields.push_back(field);
         }
     }
@@ -71,13 +52,13 @@ QVector<std::shared_ptr<Field>> FieldManager::getAdjacentFields(const Coordinate
     return adjacentFields;
 }
 
-int FieldManager::countCoveredFieldsWithoutMine(const Minefield& minefield) const
+int FieldsManager::countRemainingCoveredFieldsWithoutMine(Minefield* minefield)
 {
     int counter = 0;
 
-    for(auto& field : minefield)
+    for(auto& [coordinates, field] : minefield->getCoordinatesToFieldsMapping())
     {
-        if(field->isCovered() && !field->isMine())
+        if(field->getState() != FieldState::UNCOVERED && !field->isMinePresent())
         {
             ++counter;
         }
@@ -86,27 +67,18 @@ int FieldManager::countCoveredFieldsWithoutMine(const Minefield& minefield) cons
     return counter;
 }
 
-QVector<Coordinates> FieldManager::generateAdjacentFieldsCoordinates(const Coordinates& coordinates) const
+std::vector<Coordinates> FieldsManager::generateAdjacentFieldsCoordinates(const Coordinates& coordinates)
 {
-    static const QVector<QPair<int, int>> adjacentFieldsOffsets = {{0, -1},
-                                                                   {0, +1},
-                                                                   {-1, 0},
-                                                                   {+1, 0},
-                                                                   {-1, -1},
-                                                                   {-1, +1},
-                                                                   {+1, -1},
-                                                                   {+1, +1}};
+    std::vector<Coordinates> adjacentFieldsCoordinates;
 
-    QVector<Coordinates> adjacentFieldsCoordinates;
-
-    for(auto& offsetPair : adjacentFieldsOffsets)
+    for(const auto& [rowOffset, columnOffset] : DIRECTIONAL_OFFSETS)
     {
-        int adjacentX = coordinates.getRow() + offsetPair.first;
-        int adjacentY = coordinates.getColumn() + offsetPair.second;
+        int adjacentRow = coordinates.getRow() + rowOffset;
+        int adjacentColumn = coordinates.getColumn() + columnOffset;
 
-        if(Coordinates::validateCoordinates(adjacentX, adjacentY))
+        if(Coordinates::validateCoordinates(adjacentRow, adjacentColumn))
         {
-            adjacentFieldsCoordinates.push_back(Coordinates(adjacentX, adjacentY));
+            adjacentFieldsCoordinates.push_back(Coordinates(adjacentRow, adjacentColumn));
         }
     }
 
