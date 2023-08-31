@@ -1,12 +1,10 @@
 #include "common_test_fixture.h"
-#include "minefield.h"
+#include "model/minefield.h"
 #include "mines_generator.h"
-#include "field.h"
+#include "model/field.h"
 
 class MinesGeneratorTest : public CommonTestFixture
-{
-
-};
+{};
 
 int getMinesCount(const Minefield& minefield)
 {

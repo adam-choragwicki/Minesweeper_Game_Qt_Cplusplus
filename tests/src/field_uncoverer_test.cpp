@@ -1,15 +1,13 @@
 #include "common_test_fixture.h"
 #include "fields_manager.h"
 #include "fields_uncoverer.h"
-#include "field.h"
+#include "model/field.h"
 
 class FieldUncovererTest : public CommonTestFixture
 {
 private:
     void SetUp() override
-    {
-
-    }
+    {}
 };
 
 TEST_F(FieldUncovererTest, UncoverAdjacentEmptyFields1)
@@ -39,7 +37,7 @@ TEST_F(FieldUncovererTest, UncoverAdjacentEmptyFields1)
     EXPECT_EQ(minefield.getCoordinatesToFieldsMapping().at(Coordinates(4, 4))->getState(), FieldState::COVERED);
 
     auto& field = minefield.getCoordinatesToFieldsMapping().at(Coordinates(4, 1));
-    FieldsUncoverer::uncoverAdjacentEmptyFields(field.get(), &minefield);
+    FieldsUncoverer::uncoverAdjacentEmptyFields(*field, minefield);
 
     EXPECT_EQ(minefield.getCoordinatesToFieldsMapping().at(Coordinates(1, 1))->getState(), FieldState::UNCOVERED);
     EXPECT_EQ(minefield.getCoordinatesToFieldsMapping().at(Coordinates(1, 2))->getState(), FieldState::UNCOVERED);
@@ -88,7 +86,7 @@ TEST_F(FieldUncovererTest, UncoverAdjacentEmptyFields2)
     EXPECT_EQ(minefield.getCoordinatesToFieldsMapping().at(Coordinates(4, 4))->getState(), FieldState::COVERED);
 
     auto& field = minefield.getCoordinatesToFieldsMapping().at(Coordinates(1, 4));
-    FieldsUncoverer::uncoverAdjacentEmptyFields(field.get(), &minefield);
+    FieldsUncoverer::uncoverAdjacentEmptyFields(*field, minefield);
 
     EXPECT_EQ(minefield.getCoordinatesToFieldsMapping().at(Coordinates(1, 1))->getState(), FieldState::COVERED);
     EXPECT_EQ(minefield.getCoordinatesToFieldsMapping().at(Coordinates(1, 2))->getState(), FieldState::UNCOVERED);

@@ -1,10 +1,13 @@
-#include "minesweeper.h"
+#include "game.h"
 #include <QApplication>
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     QApplication application(argc, argv);
-    Minesweeper minesweeper;
+    Game game;
 
     return QApplication::exec();
 }
+
+//TODO center on screen does not work properly
+//TODO use State pattern on Field state

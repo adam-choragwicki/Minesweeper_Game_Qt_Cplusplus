@@ -1,72 +1,98 @@
 #include "controller.h"
 
-Controller::Controller(Model* model, GameMainWindow* view)
+Controller::Controller(Model& model, MainWindow& view) : model_(model), view_(view)
 {
-    model_ = model;
-    view_ = view;
+    subscribeToRestartEvent();
+    processRestartEvent(true);
 }
 
-void Controller::processMousePressEvent(ClickType clickType, Field* field)
+void Controller::processMousePressEvent(QMouseEvent* event, Field& field)
 {
-    if(clickType == ClickType::left)
+    if(event->button() == Qt::MouseButton::LeftButton)
     {
-        if(field->getState() == FieldState::COVERED)
+        if(field.getState() == FieldState::COVERED)
         {
-            if(field->isMinePresent())
+            if(field.isMinePresent())
             {
-                field->setState(FieldState::MINE_EXPLODED);
-                model_->processGameEnd(GameResult::lose);
+                field.setState(FieldState::MINE_EXPLODED);
+                endGame(GameResult::LOSE);
             }
             else
             {
-                field->uncover();
+                field.uncover();
 
-                if(field->getAdjacentMineCount() == 0)
+                if(field.getAdjacentMineCount() == 0)
                 {
-                    FieldsUncoverer::uncoverAdjacentEmptyFields(field, model_->getMinefield());
+                    FieldsUncoverer::uncoverAdjacentEmptyFields(field, model_.getMinefield());
                 }
             }
 
-            if(FieldsManager::countRemainingCoveredFieldsWithoutMine(model_->getMinefield()) == 0)
+            if(FieldsManager::countRemainingCoveredFieldsWithoutMine(model_.getMinefield()) == 0)
             {
-                model_->processGameEnd(GameResult::win);
+                endGame(GameResult::WIN);
             }
         }
     }
-    else if(clickType == ClickType::right)
+    else if(event->button() == Qt::MouseButton::RightButton)
     {
-        if(field->getState() == FieldState::COVERED)
+        if(field.getState() == FieldState::COVERED)
         {
-            field->setState(FieldState::FLAGGED);
+            field.setState(FieldState::FLAGGED);
         }
-        else if(field->getState() == FieldState::FLAGGED)
+        else if(field.getState() == FieldState::FLAGGED)
         {
-            field->setState(FieldState::COVERED);
+            field.setState(FieldState::COVERED);
         }
     }
+}
+
+void Controller::processRestartEvent(bool newParametersRequested)
+{
+    if(newParametersRequested)
+    {
+        MinefieldParameters minefieldParameters = view_.showGameDimensionsDialog();
+        resizeMinefield(minefieldParameters);
+
+        subscribeToFieldButtonClickedEvents();
+        subscribeFieldButtonsToFieldStateUpdatedEvents();
+    }
+    else
+    {
+        model_.reset();
+        view_.renderAllFieldButtons();
+    }
+
+    view_.show();
 }
 
 void Controller::subscribeToFieldButtonClickedEvents()
 {
-    auto& fieldButtons = view_->getFieldButtons();
-
-    for(auto& [coordinates, fieldButton] : fieldButtons)
+    for(auto&[coordinates, fieldButton] : view_.getFieldButtons())
     {
-        connect(fieldButton.get(), &FieldButton::clickedEvent, this, &Controller::processMousePressEvent);
+        connect(fieldButton.get(), &FieldButton::mousePressedEvent, this, &Controller::processMousePressEvent);
     }
 }
 
 void Controller::subscribeFieldButtonsToFieldStateUpdatedEvents()
 {
-    auto& fieldButtons = view_->getFieldButtons();
-
-    for(auto& [coordinates, fieldButton] : fieldButtons)
+    for(auto&[coordinates, fieldButton] : view_.getFieldButtons())
     {
-        connect(fieldButton.get()->getField(), &Field::fieldStateUpdatedEvent, fieldButton.get(), &FieldButton::render);
+        connect(&fieldButton.get()->getField(), &Field::fieldStateUpdatedEvent, fieldButton.get(), &FieldButton::render);
     }
 }
 
-void Controller::subscribeViewToGameEndEvent()
+void Controller::resizeMinefield(const MinefieldParameters& minefieldParameters)
 {
-    connect(model_, &Model::gameEndEvent, view_, &GameMainWindow::processGameEndSlot);
+    model_.resizeMinefield(minefieldParameters);
+    view_.updateFieldButtons();
+}
+
+void Controller::subscribeToRestartEvent() const
+{
+    connect(&view_, &MainWindow::restartEvent, this, &Controller::processRestartEvent);
+}
+
+void Controller::endGame(GameResult gameResult)
+{
+    view_.showEndGameDialog(gameResult);
 }

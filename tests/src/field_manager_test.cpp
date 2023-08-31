@@ -1,14 +1,12 @@
 #include "common_test_fixture.h"
 #include "fields_manager.h"
-#include "field.h"
+#include "model/field.h"
 
 class FieldManagerTest : public CommonTestFixture
 {
 private:
     void SetUp() override
-    {
-
-    }
+    {}
 };
 
 /*100 fields, 0 mines, 0 uncovered, 0 flags*/
@@ -17,7 +15,7 @@ TEST_F(FieldManagerTest, CountCoveredFieldsWithoutMine1)
     MinefieldParameters minefieldParameters(10, 10, 10);
     Minefield minefield(minefieldParameters);
 
-    EXPECT_EQ(FieldsManager::countRemainingCoveredFieldsWithoutMine(&minefield), 100);
+    EXPECT_EQ(FieldsManager::countRemainingCoveredFieldsWithoutMine(minefield), 100);
 }
 
 /*150 fields, 0 mines, 0 uncovered, 0 flags*/
@@ -26,7 +24,7 @@ TEST_F(FieldManagerTest, CountCoveredFieldsWithoutMine2)
     MinefieldParameters minefieldParameters(10, 15, 10);
     Minefield minefield(minefieldParameters);
 
-    EXPECT_EQ(FieldsManager::countRemainingCoveredFieldsWithoutMine(&minefield), 150);
+    EXPECT_EQ(FieldsManager::countRemainingCoveredFieldsWithoutMine(minefield), 150);
 }
 
 /*100 fields, 2 mines, 0 uncovered, 0 flags*/
@@ -38,7 +36,7 @@ TEST_F(FieldManagerTest, CountCoveredFieldsWithoutMine3)
     minefield.setMine(Coordinates(1, 2));
     minefield.setMine(Coordinates(7, 5));
 
-    EXPECT_EQ(FieldsManager::countRemainingCoveredFieldsWithoutMine(&minefield), 98);
+    EXPECT_EQ(FieldsManager::countRemainingCoveredFieldsWithoutMine(minefield), 98);
 }
 
 /*100 fields, 6 mines, 0 uncovered, 3 flags*/
@@ -58,7 +56,7 @@ TEST_F(FieldManagerTest, CountCoveredFieldsWithoutMine4)
     minefield.getCoordinatesToFieldsMapping().at(Coordinates(7, 3))->setState(FieldState::FLAGGED);
     minefield.getCoordinatesToFieldsMapping().at(Coordinates(9, 2))->setState(FieldState::FLAGGED);
 
-    EXPECT_EQ(FieldsManager::countRemainingCoveredFieldsWithoutMine(&minefield), 94);
+    EXPECT_EQ(FieldsManager::countRemainingCoveredFieldsWithoutMine(minefield), 94);
 }
 
 /*900 fields, 6 mines, 5 uncovered, 3 flags*/
@@ -84,7 +82,7 @@ TEST_F(FieldManagerTest, CountCoveredFieldsWithoutMine5)
     minefield.getCoordinatesToFieldsMapping().at(Coordinates(9, 10))->uncover();
     minefield.getCoordinatesToFieldsMapping().at(Coordinates(11, 12))->uncover();
 
-    EXPECT_EQ(FieldsManager::countRemainingCoveredFieldsWithoutMine(&minefield), 889);
+    EXPECT_EQ(FieldsManager::countRemainingCoveredFieldsWithoutMine(minefield), 889);
 }
 
 TEST_F(FieldManagerTest, GetAdjacentFields)
@@ -92,14 +90,14 @@ TEST_F(FieldManagerTest, GetAdjacentFields)
     MinefieldParameters minefieldParameters(10, 10, 10);
     Minefield minefield(minefieldParameters);
 
-    std::vector<Field*> adjacentFields1 = FieldsManager::getAdjacentFields(Coordinates(1, 1), &minefield);
+    std::vector<Field*> adjacentFields1 = FieldsManager::getAdjacentFields(Coordinates(1, 1), minefield);
 
     EXPECT_EQ(adjacentFields1.size(), 3);
     EXPECT_EQ(adjacentFields1.at(0)->getCoordinates(), Coordinates(1, 2));
     EXPECT_EQ(adjacentFields1.at(1)->getCoordinates(), Coordinates(2, 1));
     EXPECT_EQ(adjacentFields1.at(2)->getCoordinates(), Coordinates(2, 2));
 
-    auto adjacentFields2 = FieldsManager::getAdjacentFields(Coordinates(5, 10), &minefield);
+    auto adjacentFields2 = FieldsManager::getAdjacentFields(Coordinates(5, 10), minefield);
 
     EXPECT_EQ(adjacentFields2.size(), 5);
     EXPECT_EQ(adjacentFields2.at(0)->getCoordinates(), Coordinates(4, 9));
@@ -108,7 +106,7 @@ TEST_F(FieldManagerTest, GetAdjacentFields)
     EXPECT_EQ(adjacentFields2.at(3)->getCoordinates(), Coordinates(6, 9));
     EXPECT_EQ(adjacentFields2.at(4)->getCoordinates(), Coordinates(6, 10));
 
-    auto adjacentFields3 = FieldsManager::getAdjacentFields(Coordinates(5, 5), &minefield);
+    auto adjacentFields3 = FieldsManager::getAdjacentFields(Coordinates(5, 5), minefield);
 
     EXPECT_EQ(adjacentFields3.size(), 8);
     EXPECT_EQ(adjacentFields3.at(0)->getCoordinates(), Coordinates(4, 4));

@@ -1,11 +1,9 @@
 #include "common_test_fixture.h"
-#include "minefield.h"
-#include "field.h"
+#include "model/minefield.h"
+#include "model/field.h"
 
 class FieldTest : public CommonTestFixture
-{
-
-};
+{};
 
 TEST_F(FieldTest, CheckFieldDefaultParametersAfterCreation)
 {
